@@ -19,6 +19,22 @@
 #define LD8_Orange_SW 	(GPIO_PIN_14)
 #define LD6_Green_W 	(GPIO_PIN_15)
 
+typedef enum
+{
+	LED_ON = GPIO_PIN_SET,
+	LED_OFF = GPIO_PIN_RESET,
+	LED_BLINKING,
+}LedState_e;
+
+typedef struct
+{
+	GPIO_TypeDef* ledPort;
+	uint16_t      ledPin;
+	LedState_e    ledState;
+}CompassLed_t;
+
+
+
 
 void LedRoseSet();
 void LedRoseToggle();
