@@ -11,8 +11,10 @@
 #include "console.h"
 #include "consoleIo.h"
 #include "version.h"
-#include "LedRelated.h"
 #include "stm32f3_discovery_accelerometer.h"
+#include "LedRelated.h"
+
+//extern CompassLed_t myLedStructArray;
 
 #define IGNORE_UNUSED_VARIABLE(x)     if ( &x == &x ) {}
 
@@ -160,9 +162,11 @@ static eCommandResult_T ConsoleCommandLedsRose(const char buffer[])
 	IGNORE_UNUSED_VARIABLE(buffer);
 	ConsoleIoSendString("LEDs should light in a circular pattern and then extinguish the same way ");
 	ConsoleIoSendString(STR_ENDLINE);
-	LedRoseSet();
+	LedRoseSetAll(myLedStructArray);
+	LedRoseUpdate(myLedStructArray);
 	HAL_Delay(50);
-	LedRoseToggle();
+	LedRoseClearAll(myLedStructArray);
+	LedRoseUpdate(myLedStructArray);
 	return result;
 }
 

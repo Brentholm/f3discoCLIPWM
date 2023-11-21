@@ -4,31 +4,78 @@
  *  Created on: Oct 12, 2023
  *      Author: holmb
  */
+/**
+ * @file LedRelated.c
+ * @brief Functions and structures for handling the 8 LED's on the PCB
+ */
 #include "gpio.h"
 #include "LedRelated.h"
 
+/*
 CompassLed_t myLedStructArray[8] = {
-    {GPIOE, LD4_Blue_NW,   LED_ON},
-    {GPIOE, LD3_Red_N,     LED_ON},
-	{GPIOE, LD5_Orange_NE, LED_ON},
-	{GPIOE, LD7_Green_E,   LED_ON},
-	{GPIOE, LD9_Blue_SE,   LED_ON},
-	{GPIOE, LD10_Red_S,    LED_ON},
-	{GPIOE, LD8_Orange_SW, LED_ON},
-	{GPIOE, LD6_Green_W,   LED_ON},
+    {GPIOE, GPIO_PIN_9,  LD3_Red_N,     LED_OFF},
+	{GPIOE, GPIO_PIN_10, LD5_Orange_NE, LED_OFF},
+	{GPIOE, GPIO_PIN_11, LD7_Green_E,   LED_OFF},
+	{GPIOE, GPIO_PIN_12, LD9_Blue_SE,   LED_OFF},
+	{GPIOE, GPIO_PIN_13, LD10_Red_S,    LED_OFF},
+	{GPIOE, GPIO_PIN_14, LD8_Orange_SW, LED_OFF},
+	{GPIOE, GPIO_PIN_15, LD6_Green_W,   LED_OFF},
+	{GPIOE, GPIO_PIN_8,  LD4_Blue_NW,   LED_OFF},
 };
+*/
 
+ 
+/**
+  * @brief  update states of all 8 LEDs.
+  * @param  CompassLedArray[] Struct of type CompassLed_t containing the  port, pin, and desired state of the LEDs
+  * @retval None
+  */
+CompassLed_t myLedStructArray[8] = {
+		  {GPIOE, GPIO_PIN_9,  LD3_Red_N,     LED_OFF},
+		  {GPIOE, GPIO_PIN_10, LD5_Orange_NE, LED_OFF},
+		  {GPIOE, GPIO_PIN_11, LD7_Green_E,   LED_OFF},
+		  {GPIOE, GPIO_PIN_12, LD9_Blue_SE,   LED_OFF},
+		  {GPIOE, GPIO_PIN_13, LD10_Red_S,    LED_OFF},
+		  {GPIOE, GPIO_PIN_14, LD8_Orange_SW, LED_OFF},
+		  {GPIOE, GPIO_PIN_15, LD6_Green_W,   LED_OFF},
+		  {GPIOE, GPIO_PIN_8,  LD4_Blue_NW,   LED_OFF},
+  };
 
-//todo: make this function take an argument that passes it the array
-//then it can be a generic "updater"
-void LedRoseSet()
+void LedRoseSetAll(CompassLed_t leds[])
 {
-	for (int i = 0; i<8; i++ ){
-		HAL_GPIO_WritePin(myLedStructArray[i].ledPort, myLedStructArray[i].ledPin, myLedStructArray[i].ledState);
+	for (int i= 0; i<8; i++)
+	{
+		leds[i].ledState = LED_ON;
+	}
+}
+
+void LedRoseClearAll(CompassLed_t leds[])
+{
+	for (int i= 0; i<8; i++)
+	{
+		leds[i].ledState = LED_OFF;
+	}
+}
+
+void LedRoseUpdate(CompassLed_t leds[])
+{
+	for (int i = 0; i<8; i++ )
+	{
+		HAL_GPIO_WritePin(leds[i].ledPort, leds[i].ledPin, leds[i].ledState);
 		HAL_Delay(100);
 	}
 }
 
+
+/**
+  * @brief  set the desired on/off state of an individual LED.
+  * @param  CompassLedArray[] Struct of type CompassLed_t containing the  port, pin, and desired state of the LEDs
+  * @retval None
+  */
+void setLedState(CompassLed_t *led, LedState_e newState)
+{
+	led->ledState = newState;
+}
 
 //old version for comparison:
 
@@ -53,7 +100,7 @@ void LedRoseSet()
 
  }
 */
- void LedRoseToggle()
+ /*void LedRoseToggle()
  {
 	 HAL_GPIO_TogglePin(GPIOE, LD4_Blue_NW);  //blue, LD4
 	 HAL_Delay(100);
@@ -72,4 +119,4 @@ void LedRoseSet()
 	 HAL_GPIO_TogglePin(GPIOE, LD6_Green_W);  //green, LD6
 	 HAL_Delay(100);
  }
-
+*/

@@ -105,9 +105,27 @@ int main(void)
   MX_TIM3_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-  LedRoseSet();
+
+  //create an LED structure:
+
+
+
+  // write all LEDs to their initial state (OFF)
+  LedRoseUpdate(myLedStructArray);
+
+  // set all LEDs to their ON state
+  LedRoseSetAll(myLedStructArray);
+  //update the actual LED state
+  LedRoseUpdate(myLedStructArray);
+
+  // set all LEDs to their ON state
+  LedRoseClearAll(myLedStructArray);
+    //update the actual LED state
+  LedRoseUpdate(myLedStructArray);
+
   HAL_Delay(50);
-  LedRoseToggle();
+
+
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
   HAL_TIM_Base_Start_IT(&htim2);            // use this timer's rollover to cause interrupt that will check switch condition
 
@@ -133,8 +151,6 @@ int main(void)
 	  //int ch;
 	  //while ((ch = my_getchar()) != EOF) {
 	  //  __io_putchar(ch); // Print the character received
-
-
 
 
 
