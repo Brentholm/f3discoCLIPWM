@@ -25,11 +25,7 @@ CompassLed_t myLedStructArray[8] = {
 */
 
  
-/**
-  * @brief  update states of all 8 LEDs.
-  * @param  CompassLedArray[] Struct of type CompassLed_t containing the  port, pin, and desired state of the LEDs
-  * @retval None
-  */
+
 CompassLed_t myLedStructArray[8] = {
 		  {GPIOE, GPIO_PIN_9,  LD3_Red_N,     LED_OFF},
 		  {GPIOE, GPIO_PIN_10, LD5_Orange_NE, LED_OFF},
@@ -40,7 +36,11 @@ CompassLed_t myLedStructArray[8] = {
 		  {GPIOE, GPIO_PIN_15, LD6_Green_W,   LED_OFF},
 		  {GPIOE, GPIO_PIN_8,  LD4_Blue_NW,   LED_OFF},
   };
-
+/**
+  * @brief  update states of all 8 LEDs.
+  * @param  CompassLedArray[] array of struct of type CompassLed_t containing the  port, pin, and desired state of the LEDs
+  * @retval None
+  */
 void LedRoseSetAll(CompassLed_t leds[])
 {
 	for (int i= 0; i<8; i++)
@@ -57,22 +57,22 @@ void LedRoseClearAll(CompassLed_t leds[])
 	}
 }
 
-void LedRoseUpdate(CompassLed_t leds[])
+void LedRoseUpdate(CompassLed_t leds[], uint16_t delay)
 {
 	for (int i = 0; i<8; i++ )
 	{
 		HAL_GPIO_WritePin(leds[i].ledPort, leds[i].ledPin, leds[i].ledState);
-		HAL_Delay(100);
+		HAL_Delay(delay);
 	}
 }
 
 
 /**
   * @brief  set the desired on/off state of an individual LED.
-  * @param  CompassLedArray[] Struct of type CompassLed_t containing the  port, pin, and desired state of the LEDs
+  * @param  CompassLedArray Struct of type CompassLed_t containing the  port, pin, and desired state of just one particularLED
   * @retval None
   */
-void setLedState(CompassLed_t *led, LedState_e newState)
+void SetLedState(CompassLed_t *led, LedState_e newState)
 {
 	led->ledState = newState;
 }

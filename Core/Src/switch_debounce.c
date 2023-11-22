@@ -13,9 +13,9 @@ bool userButtonPressed;
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_9, GPIO_PIN_SET);    //my test pin for Saleae to watch
+	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_7, GPIO_PIN_SET);    //my test pin for Saleae to watch
 	DebounceSwitch1(&userButtonChanged, &userButtonPressed);
-	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_9, GPIO_PIN_RESET);  //my test pin for Saleae to watch
+	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_7, GPIO_PIN_RESET);  //my test pin for Saleae to watch
 }
 
 #define CHECK_MSEC 5 // Read hardware every 5 msec

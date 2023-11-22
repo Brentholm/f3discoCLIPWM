@@ -61,9 +61,10 @@ extern CompassLed_t myLedStructArray[8];
 
 void LedRoseSetAll(CompassLed_t leds[]);
 void LedRoseClearAll(CompassLed_t leds[]);
-void LedRoseUpdate(CompassLed_t leds[]);
+void LedRoseUpdate(CompassLed_t leds[], uint16_t delay);
 
-void SetLedState(CompassLed_t singleLed);
+//void SetLedState(CompassLed_t singleLed);
+void SetLedState(CompassLed_t *led, LedState_e newState);
 
 
 

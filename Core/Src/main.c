@@ -111,17 +111,17 @@ int main(void)
 
 
   // write all LEDs to their initial state (OFF)
-  LedRoseUpdate(myLedStructArray);
+  LedRoseUpdate(myLedStructArray,0);
 
   // set all LEDs to their ON state
   LedRoseSetAll(myLedStructArray);
   //update the actual LED state
-  LedRoseUpdate(myLedStructArray);
+  LedRoseUpdate(myLedStructArray,50);
 
   // set all LEDs to their ON state
   LedRoseClearAll(myLedStructArray);
     //update the actual LED state
-  LedRoseUpdate(myLedStructArray);
+  LedRoseUpdate(myLedStructArray,50);
 
   HAL_Delay(50);
 
