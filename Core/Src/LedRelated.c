@@ -11,20 +11,10 @@
 #include "gpio.h"
 #include "LedRelated.h"
 
-/*
-CompassLed_t myLedStructArray[8] = {
-    {GPIOE, GPIO_PIN_9,  LD3_Red_N,     LED_OFF},
-	{GPIOE, GPIO_PIN_10, LD5_Orange_NE, LED_OFF},
-	{GPIOE, GPIO_PIN_11, LD7_Green_E,   LED_OFF},
-	{GPIOE, GPIO_PIN_12, LD9_Blue_SE,   LED_OFF},
-	{GPIOE, GPIO_PIN_13, LD10_Red_S,    LED_OFF},
-	{GPIOE, GPIO_PIN_14, LD8_Orange_SW, LED_OFF},
-	{GPIOE, GPIO_PIN_15, LD6_Green_W,   LED_OFF},
-	{GPIOE, GPIO_PIN_8,  LD4_Blue_NW,   LED_OFF},
-};
-*/
+/**
+ * @brief  array of struct of type CompassLed_t containing the  port, pin, and desired state of the LEDs
+ */
 
- 
 
 CompassLed_t myLedStructArray[8] = {
 		  {GPIOE, GPIO_PIN_9,  LD3_Red_N,     LED_OFF},
@@ -36,8 +26,9 @@ CompassLed_t myLedStructArray[8] = {
 		  {GPIOE, GPIO_PIN_15, LD6_Green_W,   LED_OFF},
 		  {GPIOE, GPIO_PIN_8,  LD4_Blue_NW,   LED_OFF},
   };
+
 /**
-  * @brief  update states of all 8 LEDs.
+  * @brief  update states of all 8 LEDs to the ON state.
   * @param  CompassLedArray[] array of struct of type CompassLed_t containing the  port, pin, and desired state of the LEDs
   * @retval None
   */
@@ -49,6 +40,11 @@ void LedRoseSetAll(CompassLed_t leds[])
 	}
 }
 
+/**
+  * @brief  update states of all 8 LEDs to the OFF state.
+  * @param  CompassLedArray[] array of struct of type CompassLed_t containing the  port, pin, and desired state of the LEDs
+  * @retval None
+  */
 void LedRoseClearAll(CompassLed_t leds[])
 {
 	for (int i= 0; i<8; i++)
@@ -56,7 +52,13 @@ void LedRoseClearAll(CompassLed_t leds[])
 		leds[i].ledState = LED_OFF;
 	}
 }
-
+/**
+  * @brief  publish the LED states to the actual LEDs.
+  * @param  CompassLedArray[] array of struct of type CompassLed_t containing the  port, pin, and desired state of the LEDs
+  * @param  delay time in milliseconds to delay after each LED update
+  * @retval None
+  */
+ 
 void LedRoseUpdate(CompassLed_t leds[], uint16_t delay)
 {
 	for (int i = 0; i<8; i++ )

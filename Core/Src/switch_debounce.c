@@ -11,9 +11,16 @@
 bool userButtonChanged;
 bool userButtonPressed;
 
+/*
+* @brief Interrupt callback function for timer 2
+* @param htim pointer to a TIM_HandleTypeDef structure that contains a handle to the timer
+* @retval None	
+*/
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_7, GPIO_PIN_SET);    //my test pin for Saleae to watch
+	// todo: write code to check the button state
+	// and to start a timer in one-shot mode to start a debounce timer to check the button state again after ~20 msec
 	DebounceSwitch1(&userButtonChanged, &userButtonPressed);
 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_7, GPIO_PIN_RESET);  //my test pin for Saleae to watch
 }

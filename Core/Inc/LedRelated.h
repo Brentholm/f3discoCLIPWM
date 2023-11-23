@@ -10,18 +10,7 @@
 
 #include "gpio.h"
 
-/*
-#define LD4_Blue_NW 	(GPIO_PIN_8)
-#define LD3_Red_N 		(GPIO_PIN_9)
-#define LD5_Orange_NE 	(GPIO_PIN_10)
-#define LD7_Green_E		(GPIO_PIN_11)
-#define LD9_Blue_SE 	(GPIO_PIN_12)
-#define LD10_Red_S 		(GPIO_PIN_13)
-#define LD8_Orange_SW 	(GPIO_PIN_14)
-#define LD6_Green_W 	(GPIO_PIN_15)
-
-*/
-
+// Enum for LED states
 typedef enum
 {
 	LED_ON = GPIO_PIN_SET,
@@ -29,7 +18,9 @@ typedef enum
 	LED_BLINKING,    //to be implemented later
 } LedState_e;
 
-// Enum for LED names
+// Enum for LED names on the compass rose of the F3 Discovery board
+
+
 typedef enum
 {
     LD3_Red_N       = 0,
@@ -44,7 +35,7 @@ typedef enum
     TotalLeds       = 8,// A placeholder for the total number of LEDs
 } LedName_e;
 
-
+// Struct for LED port, pin, name, and state
 typedef struct
 {
 	GPIO_TypeDef* ledPort;
@@ -58,15 +49,11 @@ typedef struct
 extern CompassLed_t myLedStructArray[8];
 
 
-
+// Function prototypes
 void LedRoseSetAll(CompassLed_t leds[]);
 void LedRoseClearAll(CompassLed_t leds[]);
 void LedRoseUpdate(CompassLed_t leds[], uint16_t delay);
-
-//void SetLedState(CompassLed_t singleLed);
 void SetLedState(CompassLed_t *led, LedState_e newState);
-
-
 
 
 #endif /* SRC_LEDRELATED_H_ */
