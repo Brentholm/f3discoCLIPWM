@@ -13,6 +13,7 @@
 #include "version.h"
 #include "stm32f3_discovery_accelerometer.h"
 #include "LedRelated.h"
+#include "level_accel.h"
 
 //extern CompassLed_t myLedStructArray;
 
@@ -23,8 +24,8 @@ static eCommandResult_T ConsoleCommandVer(const char buffer[]);
 static eCommandResult_T ConsoleCommandHelp(const char buffer[]);
 static eCommandResult_T ConsoleCommandParamExampleInt16(const char buffer[]);
 static eCommandResult_T ConsoleCommandParamExampleHexUint16(const char buffer[]);
-static eCommandResult_T ConsoleCommandReadAccelX(const char buffer[]);
-static eCommandResult_T ConsoleCommandReadAccelY(const char buffer[]);
+static eCommandResult_T ConsoleCommandReadAccelS(const char buffer[]);
+static eCommandResult_T ConsoleCommandReadAccelA(const char buffer[]);
 static eCommandResult_T ConsoleCommandReadAccelZ(const char buffer[]);
 static eCommandResult_T ConsoleCommandReadAccel(const char buffer[]);
 static eCommandResult_T ConsoleCommandLedsRose(const char buffer[]);
@@ -38,8 +39,8 @@ static const sConsoleCommandTable_T mConsoleCommandTable[] =
     {"ver", &ConsoleCommandVer, HELP("Get the version string")},
     {"int", &ConsoleCommandParamExampleInt16, HELP("How to get a signed int16 from params list: int -321")},
     {"u16h", &ConsoleCommandParamExampleHexUint16, HELP("How to get a hex u16 from the params list: u16h aB12")},
-	{"acx" , &ConsoleCommandReadAccelX, HELP("Reports the current Acceleration (x-direction) in milli-g")},
-	{"acy" , &ConsoleCommandReadAccelY, HELP("Reports the current Acceleration (y-direction) in milli-g")},
+	{"acs" , &ConsoleCommandReadAccelS, HELP("reads accel once, puts values in struct, reports that struct")},
+	{"aca" , &ConsoleCommandReadAccelA, HELP("Reads the accel N times and prints each one to the console")},
 	{"acz" , &ConsoleCommandReadAccelZ, HELP("Reports the current Acceleration (z-direction) in milli-g")},
 	{"acc" , &ConsoleCommandReadAccel, HELP("reports the current 3 axis acceleration")},
 	{"leds" ,&ConsoleCommandLedsRose, HELP("Briefly flashes the 8 LEDs to show they are working")},
@@ -115,20 +116,46 @@ static eCommandResult_T ConsoleCommandVer(const char buffer[])
 	return result;
 }
 
-static eCommandResult_T ConsoleCommandReadAccelX(const char buffer[])
+static eCommandResult_T ConsoleCommandReadAccelS(const char buffer[])
 {
 	eCommandResult_T result = COMMAND_SUCCESS;
 	IGNORE_UNUSED_VARIABLE(buffer);
-	ConsoleIoSendString("x = 1");
+	int16_t accelData[3] = {0};
+	accel_data_t accelValStruct = {0};
+	ReadAccelData(accelData, &accelValStruct);
+	ConsoleIoSendString("    x accel = ");
+	ConsoleSendParamInt16(accelValStruct.x);
+	ConsoleIoSendString("    y accel = ");
+	ConsoleSendParamInt16(accelValStruct.y);
+	ConsoleIoSendString("    z accel = ");
+	ConsoleSendParamInt16(accelValStruct.z);
+	ConsoleIoSendString(STR_ENDLINE);
+	return result;
+
 	ConsoleIoSendString(STR_ENDLINE);
 	return result;
 }
 
-static eCommandResult_T ConsoleCommandReadAccelY(const char buffer[])
+static eCommandResult_T ConsoleCommandReadAccelA(const char buffer[])
 {
 	eCommandResult_T result = COMMAND_SUCCESS;
 	IGNORE_UNUSED_VARIABLE(buffer);
-	ConsoleIoSendString("y = 2");
+	int16_t accelData[3] = {0};
+	accel_data_t accel_struct_array[100] = {0};
+	int N=40;
+	ReadAccelDataArray(accelData, accel_struct_array, N );
+	ConsoleIoSendString("x, y, z ");
+	ConsoleIoSendString(STR_ENDLINE);
+	for (int i=0; i<N; i++)
+	{
+		ConsoleSendParamInt16(accel_struct_array[i].x);
+		ConsoleIoSendString(" , ");
+		ConsoleSendParamInt16(accel_struct_array[i].y);
+		ConsoleIoSendString(" , ");
+		ConsoleSendParamInt16(accel_struct_array[i].z);
+		ConsoleIoSendString(STR_ENDLINE);
+	}
+	
 	ConsoleIoSendString(STR_ENDLINE);
 	return result;
 }
@@ -152,7 +179,7 @@ static eCommandResult_T ConsoleCommandReadAccel(const char buffer[])
 	ConsoleSendParamInt16(accelData[0]);
 	ConsoleIoSendString("    y accel = ");
 	ConsoleSendParamInt16(accelData[1]);
-	ConsoleIoSendString("    ACCZ accel = ");
+	ConsoleIoSendString("    z accel = ");
 	ConsoleSendParamInt16(accelData[2]);
 	ConsoleIoSendString(STR_ENDLINE);
 	return result;
