@@ -151,9 +151,10 @@ int main(void)
 
   HAL_Delay(1000);
   ST7735_FillScreen(ST7735_BLACK);
-  ST7735_WriteString(0, 3*10, "Font_11x18, green, lorem ipsum", Font_11x18, ST7735_GREEN, ST7735_BLACK);
-  HAL_Delay(1000);
+  ST7735_WriteString(0, 3*10, "Hello Green Turtles", Font_11x18, ST7735_GREEN, ST7735_BLACK);
+  HAL_Delay(5000);
   ST7735_FillScreen(ST7735_BLACK);
+
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
   HAL_TIM_Base_Start_IT(&htim2);            // use this timer's rollover to cause interrupt that will check switch condition
 

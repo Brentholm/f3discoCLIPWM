@@ -46,6 +46,7 @@ void ReadAccelDataArray(int16_t* raw_accel_data, accel_data_t* accel_data_array,
 	{
 		// Read the accelerometer data
 		BSP_ACCELERO_GetXYZ(raw_accel_data);
+		HAL_Delay(10);
 
 		// Convert the raw data to milli-g's and store it in the array of structs
 		accel_data_array[i].x = raw_accel_data[0];
