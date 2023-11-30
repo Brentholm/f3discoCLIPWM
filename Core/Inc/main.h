@@ -73,8 +73,14 @@ void Error_Handler(void);
 #define OSC_IN_GPIO_Port GPIOF
 #define OSC_OUT_Pin GPIO_PIN_1
 #define OSC_OUT_GPIO_Port GPIOF
+#define TFT_CD_Pin GPIO_PIN_0
+#define TFT_CD_GPIO_Port GPIOC
+#define TFT_RST_Pin GPIO_PIN_1
+#define TFT_RST_GPIO_Port GPIOC
 #define B1_Pin GPIO_PIN_0
 #define B1_GPIO_Port GPIOA
+#define TFT_LITE_Pin GPIO_PIN_4
+#define TFT_LITE_GPIO_Port GPIOA
 #define SPI1_SCK_Pin GPIO_PIN_5
 #define SPI1_SCK_GPIO_Port GPIOA
 #define SPI1_MISO_Pin GPIO_PIN_6
@@ -101,6 +107,8 @@ void Error_Handler(void);
 #define LD8_GPIO_Port GPIOE
 #define LD6_Pin GPIO_PIN_15
 #define LD6_GPIO_Port GPIOE
+#define TFT_CS_Pin GPIO_PIN_12
+#define TFT_CS_GPIO_Port GPIOB
 #define test_GPIO_Pin GPIO_PIN_9
 #define test_GPIO_GPIO_Port GPIOC
 #define DM_Pin GPIO_PIN_11

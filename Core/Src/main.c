@@ -27,12 +27,14 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
-#include "stm32f3_discovery_accelerometer.h"
-#include "console.h"
 #include <string.h>
 #include <stdbool.h>
+#include "stm32f3_discovery_accelerometer.h"
+#include "console.h"
 #include "LedRelated.h"
 #include "switch_debounce.h"
+#include "../st7735/st7735.h"
+#include "../st7735/fonts.h"
 
 /*
 //new for the ST7735 TFT display
@@ -110,6 +112,7 @@ int main(void)
   MX_USART1_UART_Init();
   MX_TIM3_Init();
   MX_TIM2_Init();
+  MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
 
   //create an LED structure:
@@ -124,14 +127,33 @@ int main(void)
   //update the actual LED state
   LedRoseUpdate(myLedStructArray,50);
 
-  // set all LEDs to their ON state
+  // set all LEDs to their OFF state
   LedRoseClearAll(myLedStructArray);
     //update the actual LED state
   LedRoseUpdate(myLedStructArray,50);
 
   HAL_Delay(50);
+  ST7735_Init();
 
 
+  HAL_GPIO_WritePin(ST7735_LITE_GPIO_Port, ST7735_LITE_Pin, SET);
+  ST7735_FillScreen(ST7735_BLACK);
+
+  for(int x = 0; x < ST7735_WIDTH; x++) {
+	  ST7735_DrawPixel(x, 0, ST7735_RED);
+	  ST7735_DrawPixel(x, ST7735_HEIGHT-1, ST7735_RED);
+  }
+
+  for(int y = 0; y < ST7735_HEIGHT; y++) {
+	  ST7735_DrawPixel(0, y, ST7735_RED);
+	  ST7735_DrawPixel(ST7735_WIDTH-1, y, ST7735_RED);
+  }
+
+  HAL_Delay(1000);
+  ST7735_FillScreen(ST7735_BLACK);
+  ST7735_WriteString(0, 3*10, "Font_11x18, green, lorem ipsum", Font_11x18, ST7735_GREEN, ST7735_BLACK);
+  HAL_Delay(1000);
+  ST7735_FillScreen(ST7735_BLACK);
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
   HAL_TIM_Base_Start_IT(&htim2);            // use this timer's rollover to cause interrupt that will check switch condition
 
@@ -151,7 +173,7 @@ int main(void)
 
   while (1)
   {
-	 /* USER CODE END WHILE */
+    /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
 	  //Call my_getchar to read characters interactively
