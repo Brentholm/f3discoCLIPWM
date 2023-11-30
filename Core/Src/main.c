@@ -33,6 +33,12 @@
 #include <stdbool.h>
 #include "LedRelated.h"
 #include "switch_debounce.h"
+
+/*
+//new for the ST7735 TFT display
+#include "../st7735/st7735.h"
+#include "../st7735/fonts.h"
+*/
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -142,9 +148,10 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
   while (1)
   {
-    /* USER CODE END WHILE */
+	 /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
 	  //Call my_getchar to read characters interactively
