@@ -32,7 +32,7 @@ typedef enum
 	LD6_Green_W     = 6,
 	LD4_Blue_NW     = 7,
     // Add more names as needed
-    TotalLeds       = 8,// A placeholder for the total number of LEDs
+    TotalLeds       = 8 // A placeholder for the total number of LEDs
 } LedName_e;
 
 // Struct for LED port, pin, name, and state

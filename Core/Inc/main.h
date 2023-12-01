@@ -77,8 +77,6 @@ void Error_Handler(void);
 #define TFT_CD_GPIO_Port GPIOC
 #define TFT_RST_Pin GPIO_PIN_1
 #define TFT_RST_GPIO_Port GPIOC
-#define B1_Pin GPIO_PIN_0
-#define B1_GPIO_Port GPIOA
 #define TFT_LITE_Pin GPIO_PIN_4
 #define TFT_LITE_GPIO_Port GPIOA
 #define SPI1_SCK_Pin GPIO_PIN_5
@@ -91,6 +89,8 @@ void Error_Handler(void);
 #define VCP_TX_GPIO_Port GPIOC
 #define VCP_RX_Pin GPIO_PIN_5
 #define VCP_RX_GPIO_Port GPIOC
+#define TIM2_RO_Pin GPIO_PIN_7
+#define TIM2_RO_GPIO_Port GPIOE
 #define LD4_Pin GPIO_PIN_8
 #define LD4_GPIO_Port GPIOE
 #define LD3_Pin GPIO_PIN_9
@@ -125,8 +125,6 @@ void Error_Handler(void);
 #define I2C1_SCL_GPIO_Port GPIOB
 #define I2C1_SDA_Pin GPIO_PIN_7
 #define I2C1_SDA_GPIO_Port GPIOB
-#define MEMS_INT1_Pin GPIO_PIN_0
-#define MEMS_INT1_GPIO_Port GPIOE
 #define MEMS_INT2_Pin GPIO_PIN_1
 #define MEMS_INT2_GPIO_Port GPIOE
 

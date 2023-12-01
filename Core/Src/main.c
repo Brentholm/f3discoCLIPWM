@@ -155,8 +155,9 @@ int main(void)
   HAL_Delay(5000);
   ST7735_FillScreen(ST7735_BLACK);
 
-  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
+  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);  //pwm on pin PC6 just for fun - it's on the lower right corner of F3Disco board
   HAL_TIM_Base_Start_IT(&htim2);            // use this timer's rollover to cause interrupt that will check switch condition
+    	  	  	  	  	  	  		    	  // the code to handle this event is in switch_debounce.c
 
 
   USART1_SendString("Hello, World!\r\n");
