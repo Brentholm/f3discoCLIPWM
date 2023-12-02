@@ -66,6 +66,7 @@
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
+static void MX_NVIC_Init(void);
 /* USER CODE BEGIN PFP */
 void USART1_SendString(const char* str);
 int __io_putchar(int ch);
@@ -113,7 +114,13 @@ int main(void)
   MX_TIM3_Init();
   MX_TIM2_Init();
   MX_SPI2_Init();
+
+  /* Initialize interrupts */
+  MX_NVIC_Init();
   /* USER CODE BEGIN 2 */
+
+
+  // enable external pin interrupt
 
   //create an LED structure:
 
@@ -156,7 +163,8 @@ int main(void)
   ST7735_FillScreen(ST7735_BLACK);
 
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);  //pwm on pin PC6 just for fun - it's on the lower right corner of F3Disco board
-  HAL_TIM_Base_Start_IT(&htim2);            // use this timer's rollover to cause interrupt that will check switch condition
+  //don't start this here; it will get started when the button press ISR/callback fires
+  //HAL_TIM_Base_Start_IT(&htim2);            // use this timer's rollover to cause interrupt that will check switch condition
     	  	  	  	  	  	  		    	  // the code to handle this event is in switch_debounce.c
 
 
@@ -243,6 +251,17 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+}
+
+/**
+  * @brief NVIC Configuration.
+  * @retval None
+  */
+static void MX_NVIC_Init(void)
+{
+  /* EXTI0_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI0_IRQn);
 }
 
 /* USER CODE BEGIN 4 */
