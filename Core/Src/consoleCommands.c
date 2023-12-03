@@ -26,7 +26,7 @@ static eCommandResult_T ConsoleCommandParamExampleInt16(const char buffer[]);
 static eCommandResult_T ConsoleCommandParamExampleHexUint16(const char buffer[]);
 static eCommandResult_T ConsoleCommandReadAccelS(const char buffer[]);
 static eCommandResult_T ConsoleCommandReadAccelA(const char buffer[]);
-static eCommandResult_T ConsoleCommandReadAccelZ(const char buffer[]);
+static eCommandResult_T ConsoleCommandReadAngle(const char buffer[]);
 static eCommandResult_T ConsoleCommandReadAccel(const char buffer[]);
 static eCommandResult_T ConsoleCommandLedsRose(const char buffer[]);
 static eCommandResult_T ConsoleCommandLedsRocker(const char buffer[]);
@@ -41,7 +41,7 @@ static const sConsoleCommandTable_T mConsoleCommandTable[] =
     {"u16h", &ConsoleCommandParamExampleHexUint16, HELP("How to get a hex u16 from the params list: u16h aB12")},
 	{"acs" , &ConsoleCommandReadAccelS, HELP("reads accel once, puts values in struct, reports that struct")},
 	{"aca" , &ConsoleCommandReadAccelA, HELP("Reads the accel N times and prints each one to the console")},
-	{"acz" , &ConsoleCommandReadAccelZ, HELP("Reports the current Acceleration (z-direction) in milli-g")},
+	{"agl" , &ConsoleCommandReadAngle, HELP("Reports the current Acceleration (z-direction) in milli-g")},
 	{"acc" , &ConsoleCommandReadAccel, HELP("reports the current 3 axis acceleration")},
 	{"leds" ,&ConsoleCommandLedsRose, HELP("Briefly flashes the 8 LEDs to show they are working")},
 	{"rokr" ,&ConsoleCommandLedsRocker, HELP("LED teeter totter for ~2seconds")},
@@ -160,12 +160,49 @@ static eCommandResult_T ConsoleCommandReadAccelA(const char buffer[])
 	return result;
 }
 
-static eCommandResult_T ConsoleCommandReadAccelZ(const char buffer[])
+static eCommandResult_T ConsoleCommandReadAngle(const char buffer[])
 {
 	eCommandResult_T result = COMMAND_SUCCESS;
+	accel_data_t accel_struct_array[100] = {0};
+	int16_t accelData[3] = {0};
+	uint32_t xSum, ySum, zSum = 0;     // accumulate the consecutive sample values
+	uint32_t N = 0;
+	float xAve, yAve, zAve = 0;        // hold the average value of accel along each axis
 	IGNORE_UNUSED_VARIABLE(buffer);
-	ConsoleIoSendString("z = 3 ");
+	ConsoleIoSendString("Angle Horizontal ");
 	ConsoleIoSendString(STR_ENDLINE);
+
+	ReadAccelDataArray(accelData, accel_struct_array, N );
+	ConsoleIoSendString("x, y, z ");
+	ConsoleIoSendString(STR_ENDLINE);
+		for (int i=0; i<N; i++)
+		{
+			ConsoleSendParamInt16(accel_struct_array[i].x);
+			ConsoleIoSendString(" , ");
+			ConsoleSendParamInt16(accel_struct_array[i].y);
+			ConsoleIoSendString(" , ");
+			ConsoleSendParamInt16(accel_struct_array[i].z);
+			ConsoleIoSendString(STR_ENDLINE);
+			// sum the individual pieces as we go
+			xSum += accel_struct_array[i].x;
+			ySum += accel_struct_array[i].y;
+			zSum += accel_struct_array[i].z;
+		}
+		xAve = (float)xSum/N;
+		yAve = (float)ySum/N;
+		zAve = (float)ySum/N;
+
+		ConsoleIoSendString(STR_ENDLINE);
+		ConsoleIoSendString("xSum, ySum, zSumx ");
+		ConsoleIoSendString(STR_ENDLINE);
+
+		ConsoleSendParamInt16(xSum);
+		ConsoleIoSendString(" , ");
+		ConsoleSendParamInt16(ySum);
+		ConsoleIoSendString(" , ");
+		ConsoleSendParamInt16(zSum);
+		ConsoleIoSendString(STR_ENDLINE);
+
 	return result;
 }
 
