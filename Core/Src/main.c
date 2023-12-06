@@ -62,17 +62,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-// declare an instance of array of 3 uint16_t's to hold the raw accelerometer data
-extern int16_t raw_accel_data[3];
 
-// declare an instance of the struct to hold the accel data in milli-g's
-extern accel_data_t accel_Value_struct;
-
-// array of structs that can hold up to 100 accel data readings
-extern accel_data_t accel_data_array[100];
-
-// instance of struct with five floats to hold the average accel data
-extern accel_math_t* accel_math;
 
 
 
@@ -203,8 +193,8 @@ int main(void)
 
 	  ConsoleInit();
 #define READINGSTOAVERAGE 3
-	  ReadAccelDataArray(raw_accel_data,  accel_data_array, READINGSTOAVERAGE);
-      AverageAccelData(accel_data_array,  accel_math, READINGSTOAVERAGE);
+	  ReadAccelDataArray(&rawAccelData,  &accelDataArray, READINGSTOAVERAGE);
+      AverageAccelData(&accelDataArray,  &accelMath, READINGSTOAVERAGE);
 
 
 	  while(1)

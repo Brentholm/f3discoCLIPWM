@@ -121,7 +121,7 @@ static eCommandResult_T ConsoleCommandReadAccelS(const char buffer[])
 	eCommandResult_T result = COMMAND_SUCCESS;
 	IGNORE_UNUSED_VARIABLE(buffer);
 	int16_t accelData[3] = {0};
-	accel_data_t accelValStruct = {0};
+	AccelData_t accelValStruct = {0};
 	ReadAccelData(accelData, &accelValStruct);
 	ConsoleIoSendString("    x accel = ");
 	ConsoleSendParamInt16(accelValStruct.x);
@@ -141,7 +141,7 @@ static eCommandResult_T ConsoleCommandReadAccelA(const char buffer[])
 	eCommandResult_T result = COMMAND_SUCCESS;
 	IGNORE_UNUSED_VARIABLE(buffer);
 	int16_t accelData[3] = {0};
-	accel_data_t accel_struct_array[100] = {0};
+	AccelData_t accel_struct_array[100] = {0};
 	int N=40;
 	ReadAccelDataArray(accelData, accel_struct_array, N );
 	ConsoleIoSendString("x, y, z ");
@@ -163,7 +163,7 @@ static eCommandResult_T ConsoleCommandReadAccelA(const char buffer[])
 static eCommandResult_T ConsoleCommandReadAngle(const char buffer[])
 {
 	eCommandResult_T result = COMMAND_SUCCESS;
-	accel_data_t accel_struct_array[100] = {0};
+	AccelData_t accel_struct_array[100] = {0};
 	int16_t accelData[3] = {0};
 	uint32_t xSum, ySum, zSum = 0;     // accumulate the consecutive sample values
 	uint32_t N = 0;
