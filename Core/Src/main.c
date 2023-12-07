@@ -122,34 +122,21 @@ int main(void)
   /* Initialize interrupts */
   MX_NVIC_Init();
   /* USER CODE BEGIN 2 */
+  
+  LedRoseUpdate(myLedStructArray,0);    // update the physical LED's to their initial state (OFF), with zero delay between each one
 
+  LedRoseSetAll(myLedStructArray);      // set all LEDs to their ON state in the struct
+  LedRoseUpdate(myLedStructArray,50);   // update the actual LED state in a pinwheel fashion with 50ms delay between each one
+  
+  LedRoseClearAll(myLedStructArray);    // set all LEDs to their OFF state in the struct
+  LedRoseUpdate(myLedStructArray,50);   // update the actual LED state in a pinwheel fashion with 50ms delay between each one
 
-  // enable external pin interrupt
+  ST7735_Init();                        // initialize the TFT display
 
-  //create an LED structure:
+  HAL_GPIO_WritePin(ST7735_LITE_GPIO_Port, ST7735_LITE_Pin, SET);   // turn on the TFT backlight
+  ST7735_FillScreen(ST7735_BLACK);      // fill the screen with black to blank it
 
-
-
-  // write all LEDs to their initial state (OFF)
-  LedRoseUpdate(myLedStructArray,0);
-
-  // set all LEDs to their ON state
-  LedRoseSetAll(myLedStructArray);
-  //update the actual LED state
-  LedRoseUpdate(myLedStructArray,50);
-
-  // set all LEDs to their OFF state
-  LedRoseClearAll(myLedStructArray);
-    //update the actual LED state
-  LedRoseUpdate(myLedStructArray,50);
-
-  HAL_Delay(50);
-  ST7735_Init();
-
-
-  HAL_GPIO_WritePin(ST7735_LITE_GPIO_Port, ST7735_LITE_Pin, SET);
-  ST7735_FillScreen(ST7735_BLACK);
-
+  // draw a red border around the screen
   for(int x = 0; x < ST7735_WIDTH; x++) {
 	  ST7735_DrawPixel(x, 0, ST7735_RED);
 	  ST7735_DrawPixel(x, ST7735_HEIGHT-1, ST7735_RED);
@@ -160,11 +147,13 @@ int main(void)
 	  ST7735_DrawPixel(ST7735_WIDTH-1, y, ST7735_RED);
   }
 
-  HAL_Delay(1000);
+  // delay a half second before clearing the screen again
+  HAL_Delay(500);
   ST7735_FillScreen(ST7735_BLACK);
+
   ST7735_WriteString(0, 3*10, "Hello Green Turtles", Font_11x18, ST7735_GREEN, ST7735_BLACK);
-  HAL_Delay(5000);
-  ST7735_FillScreen(ST7735_BLACK);
+  HAL_Delay(500);
+  // ST7735_FillScreen(ST7735_BLACK);
 
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);  //pwm on pin PC6 just for fun - it's on the lower right corner of F3Disco board
   //don't start this here; it will get started when the button press ISR/callback fires
@@ -172,14 +161,24 @@ int main(void)
     	  	  	  	  	  	  		    	  // the code to handle this event is in switch_debounce.c
 
 
+  // exercise the console code
   USART1_SendString("Hello, World!\r\n");
   printf("Hi Brent\r\n");
 
+  // initialize the onboard accelerometer 
   BSP_ACCELERO_Init();
 
   int16_t accelData[3] = {0};
   BSP_ACCELERO_GetXYZ(accelData);
 
+  // practice putting a rounded float to the screen
+  float myfloat = 3.14159;
+  char str[6] = "3.14";
+  char str2[6] = "999.9";
+  ST7735_WriteString(0, (3*10+2*18), str, Font_11x18, ST7735_GREEN, ST7735_BLACK);
+  // format float for printing as a string with two decimal places
+  sprintf(str2, "%3f", myfloat);
+  ST7735_WriteString(0, (3*10+3*18), str2, Font_11x18, ST7735_GREEN, ST7735_BLACK);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -193,8 +192,8 @@ int main(void)
 
 	  ConsoleInit();
 #define READINGSTOAVERAGE 3
-	  ReadAccelDataArray(&rawAccelData,  &accelDataArray, READINGSTOAVERAGE);
-      AverageAccelData(&accelDataArray,  &accelMath, READINGSTOAVERAGE);
+	  ReadAccelDataArray(rawAccelData,  accelDataArray, READINGSTOAVERAGE);
+      AverageAccelData(accelDataArray,  &accelMath, READINGSTOAVERAGE);
 
 
 	  while(1)

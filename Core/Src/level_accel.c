@@ -13,17 +13,11 @@
 #include "level_accel.h"
 
 
-// declare an instance of array of 3 uint16_t's to hold the raw accelerometer data
-int16_t rawAccelData[3];
-
-// declare an instance of the struct to hold the accel data in milli-g's
-AccelData_t accelValueStruct;
-
-// array of structs that can hold up to 100 accel data readings
-AccelData_t accelDataArray[100]= {0};
-
-// pointer to struct with five floats to hold the averages and angles accel data
-AccelCalculations_t* accelMath = {0} ;
+//data types for Accelerometer
+int16_t rawAccelData[3];                 //3 sixteen-bit integers produced by the HAL call to the accelerometer read function
+AccelData_t accelValueStruct = {0} ;     //structure to contain accelerometer data organized with an x, y, and z member
+AccelData_t accelDataArray[100]= {0};    //array of the x,y, and z values to be used for further signal processing (averaging)
+AccelCalculations_t* accelMath = {0} ;   //struct to hold the average of each component x_avg, y_avg, z_avg plus computed angles.
 
 
 /*
@@ -31,6 +25,7 @@ AccelCalculations_t* accelMath = {0} ;
 * @param rawAccelData[] pointer to an array of 3 uint16_t's to hold the raw accelerometer data the supplied driver fills
 * @param accel_data pointer to a struct to hold the accel data in milli-g's
 * @returnval None
+* @note this function was written as a starting point and was generalized to a function that reads N times below
 */
 void ReadAccelData(int16_t* rawAccelData, AccelData_t* accel_data)
 {
@@ -43,6 +38,15 @@ void ReadAccelData(int16_t* rawAccelData, AccelData_t* accel_data)
     accel_data->z = rawAccelData[2];
 }
 
+/* 
+* @brief Read the accelerometer data N times and move it into an array of structs
+* @param rawAccelData[] pointer to an array of 3 int16_t's to hold the raw accelerometer data the supplied driver fills
+* @param accel_data_array pointer to an array of structs to hold the accel data 
+* @param N the number of data points to read
+* @returnval None
+* @note there is an intentional 10ms delay between each reading to guarantee the readings are independent
+* @note this function was written as an enhancement to the original ReadAccelData function to allow collecting multiple readings
+* */
 void ReadAccelDataArray(int16_t* rawAccelData, AccelData_t* accelDataArray, int N)
 {
 	if (N > 100)
@@ -53,17 +57,18 @@ void ReadAccelDataArray(int16_t* rawAccelData, AccelData_t* accelDataArray, int 
 		BSP_ACCELERO_GetXYZ(rawAccelData);
 		HAL_Delay(10);
 
-		//store the individual x, y, z reading to in the array of structs
+		//store the individual x, y, z reading to the array of structs
 		accelDataArray[i].x = rawAccelData[0];
 		accelDataArray[i].y = rawAccelData[1];
 		accelDataArray[i].z = rawAccelData[2];
 	}
 }
 
-/// @brief
-/// @param accel_data_array, a pointer to an array of struct that holds instances of x, y, and z
-/// @param accel_results, a pointer to a struct that holds the averages and angles of the accel data
-/// @param N, the number of data points to average
+/*@brief Calculate the average along each dimension and then the angle using arctan of the accelerometer data
+* @param accel_data_array, a pointer to an array of struct that holds instances of x, y, and z
+* @param accel_results, a pointer to a struct that holds the averages and angles of the accel data
+* @param N, the number of data points to average
+ */
 void AverageAccelData(AccelData_t* samplesArray, AccelCalculations_t* results, int32_t N)
 {
 	if (N > 100)
@@ -71,30 +76,20 @@ void AverageAccelData(AccelData_t* samplesArray, AccelCalculations_t* results, i
 	int32_t x_sum = 0;
 	int32_t y_sum = 0;
 	int32_t z_sum = 0;
-	/*float xAvg = 0;
-	float yAvg = 0;
-	float zAvg = 0;
-	float hTan = 0;
-	float vTan = 0;*/
+	
 	for (int i = 0; i < N; i++)
 	{
 		x_sum += samplesArray[i].x;
 		y_sum += samplesArray[i].y;
 		z_sum += samplesArray[i].z;
 	}
-	(*results).x_avg = (float)x_sum / N;
-	(*results).y_avg = (float)y_sum / N;
-	(*results).z_avg = (float)z_sum / N;
-	/*results->x_avg = (float)x_sum / N;
+	
+	results->x_avg = (float)x_sum / N;
 	results->y_avg = (float)y_sum / N;
-	results->z_avg = (float)z_sum / N;*/
-	/*xAvg = (float)x_sum / N;
-	yAvg = (float)y_sum / N;
-	zAvg = (float)z_sum / N;
-*/
+	results->z_avg = (float)z_sum / N;
+	
 	results->horiz_angle = atan2(results->x_avg, results->y_avg);
 	results->vert_angle  = atan2(results->y_avg, results->x_avg);
-	/*hTan = atan2(xAvg, zAvg)* RADIANS_TO_DEGREES;
-	vTan = atan2(zAvg, xAvg)* RADIANS_TO_DEGREES;*/
+	
 }
 

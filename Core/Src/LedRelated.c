@@ -4,6 +4,7 @@
  *  Created on: Oct 12, 2023
  *      Author: holmb
  */
+// Path: Core/Src/LedRelated.c
 /**
  * @file LedRelated.c
  * @brief Functions and structures for handling the 8 LED's on the PCB
@@ -14,7 +15,6 @@
 /**
  * @brief  array of struct of type CompassLed_t containing the  port, pin, and desired state of the LEDs
  */
-
 
 CompassLed_t myLedStructArray[8] = {
 		  {GPIOE, GPIO_PIN_9,  LD3_Red_N,     LED_OFF},
@@ -55,7 +55,7 @@ void LedRoseClearAll(CompassLed_t leds[])
 /**
   * @brief  publish the LED states to the actual LEDs.
   * @param  CompassLedArray[] array of struct of type CompassLed_t containing the  port, pin, and desired state of the LEDs
-  * @param  delay time in milliseconds to delay after each LED update
+  * @param  delay time in milliseconds to delay after each LED update...just for dramatic effect
   * @retval None
   */
  
@@ -79,46 +79,4 @@ void SetLedState(CompassLed_t *led, LedState_e newState)
 	led->ledState = newState;
 }
 
-//old version for comparison:
-
- /*void LedRoseSet()
- {
-	 //turn on the LED's one at a time in clockwise fashion
-	 HAL_GPIO_WritePin(GPIOE, LD4_Blue_NW, GPIO_PIN_SET);  //blue, LD4
-	 HAL_Delay(100);
-	 HAL_GPIO_WritePin(GPIOE, LD3_Red_N, GPIO_PIN_SET);  //red, LD3
-	 HAL_Delay(100);
-	 HAL_GPIO_WritePin(GPIOE, LD5_Orange_NE, GPIO_PIN_SET); //orange, LD5
-	 HAL_Delay(100);
-	 HAL_GPIO_WritePin(GPIOE, LD7_Green_E, GPIO_PIN_SET);  //green, LD7
-	 HAL_Delay(100);
-	 HAL_GPIO_WritePin(GPIOE, LD9_Blue_SE, GPIO_PIN_SET);  //blue, LD9
-	 HAL_Delay(100);
-	 HAL_GPIO_WritePin(GPIOE, LD10_Red_S, GPIO_PIN_SET); //red, LD10
-	 HAL_Delay(100);
-	 HAL_GPIO_WritePin(GPIOE, LD8_Orange_SW, GPIO_PIN_SET);  //orange, LD8
-	 HAL_Delay(100);
-	 HAL_GPIO_WritePin(GPIOE, LD6_Green_W, GPIO_PIN_SET);  //green, LD6
-
- }
-*/
- /*void LedRoseToggle()
- {
-	 HAL_GPIO_TogglePin(GPIOE, LD4_Blue_NW);  //blue, LD4
-	 HAL_Delay(100);
-	 HAL_GPIO_TogglePin(GPIOE, LD3_Red_N);  //red, LD3
-	 HAL_Delay(100);
-	 HAL_GPIO_TogglePin(GPIOE, LD5_Orange_NE); //orange, LD5
-	 HAL_Delay(100);
-	 HAL_GPIO_TogglePin(GPIOE, LD7_Green_E);  //green, LD7
-	 HAL_Delay(100);
-	 HAL_GPIO_TogglePin(GPIOE, LD9_Blue_SE);  //blue, LD9
-	 HAL_Delay(100);
-	 HAL_GPIO_TogglePin(GPIOE, LD10_Red_S); //red, LD10
-	 HAL_Delay(100);
-	 HAL_GPIO_TogglePin(GPIOE, LD8_Orange_SW);  //orange, LD8
-	 HAL_Delay(100);
-	 HAL_GPIO_TogglePin(GPIOE, LD6_Green_W);  //green, LD6
-	 HAL_Delay(100);
- }
-*/
+// Path: Core/Src/LedRelated.c

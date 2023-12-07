@@ -19,8 +19,9 @@ typedef enum
 } LedState_e;
 
 // Enum for LED names on the compass rose of the F3 Discovery board
-
-
+// @note this enumeration makes it possible to use a for loop to iterate through the LEDs
+// @note ...to keep the code more compact. 
+// @note having a name for each LED makes the code more readable, one can use the name as the 'index' that goes inside the brackets
 typedef enum
 {
     LD3_Red_N       = 0,
@@ -35,7 +36,7 @@ typedef enum
     TotalLeds       = 8 // A placeholder for the total number of LEDs
 } LedName_e;
 
-// Struct for LED port, pin, name, and state
+// Struct for each LED: its port , pin#, my name for it, and its state
 typedef struct
 {
 	GPIO_TypeDef* ledPort;
@@ -44,16 +45,14 @@ typedef struct
 	LedState_e    ledState;
 } CompassLed_t;
 
-
-// Declare the array without allocating space (extern)
+// Declare the array for all my LEDs without allocating space (extern)
 extern CompassLed_t myLedStructArray[8];
 
-
 // Function prototypes
-void LedRoseSetAll(CompassLed_t leds[]);
-void LedRoseClearAll(CompassLed_t leds[]);
-void LedRoseUpdate(CompassLed_t leds[], uint16_t delay);
-void SetLedState(CompassLed_t *led, LedState_e newState);
+void SetLedState(CompassLed_t *led, LedState_e newState); // Set the state of a single LED. Updates the struct, but doesn't update the physical LEDs
+void LedRoseSetAll(CompassLed_t leds[]);       // Set all LEDs to ON. Updates the struct, but doesn't update the physical LEDs
+void LedRoseClearAll(CompassLed_t leds[]);     // Set all LEDs to OFF. Updates the struct, but doesn't update the physical LEDs
+void LedRoseUpdate(CompassLed_t leds[], uint16_t delay);  // Update the physical LEDs to match the struct
 
 
 #endif /* SRC_LEDRELATED_H_ */
