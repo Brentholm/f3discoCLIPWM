@@ -91,7 +91,8 @@ int my_getchar(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+	AccelCalculations_t accelVessel ={0};
+	AccelCalculations_t* pAccelVessel = &accelVessel;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -174,10 +175,10 @@ int main(void)
   // practice putting a rounded float to the screen
   float myfloat = 3.14159;
   char str[6] = "3.14";
-  char str2[6] = "999.9";
+  char str2[20] = "999.9";
   ST7735_WriteString(0, (3*10+2*18), str, Font_11x18, ST7735_GREEN, ST7735_BLACK);
   // format float for printing as a string with two decimal places
-  sprintf(str2, "%3f", myfloat);
+  sprintf(str2, "%2.2f", myfloat);
   ST7735_WriteString(0, (3*10+3*18), str2, Font_11x18, ST7735_GREEN, ST7735_BLACK);
   /* USER CODE END 2 */
 
@@ -192,13 +193,18 @@ int main(void)
 
 	  ConsoleInit();
 #define READINGSTOAVERAGE 3
-	  ReadAccelDataArray(rawAccelData,  accelDataArray, READINGSTOAVERAGE);
-      AverageAccelData(accelDataArray,  &accelMath, READINGSTOAVERAGE);
+
 
 
 	  while(1)
 	  {
-		  ConsoleProcess();
+		  //ConsoleProcess();
+		  ReadAccelDataArray(rawAccelData,  accelDataArray, READINGSTOAVERAGE);
+		  AverageAccelData(accelDataArray,  pAccelVessel, READINGSTOAVERAGE);
+		  sprintf(str2, "angle = %2.2f", accelVessel.horiz_angle);
+		  ST7735_FillScreen(ST7735_BLACK);
+		  ST7735_WriteString(0, (3*10+3*18), str2, Font_11x18, ST7735_GREEN, ST7735_BLACK);
+		  HAL_Delay(200);
 	  }
 
   }

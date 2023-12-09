@@ -35,7 +35,7 @@ typedef struct {
 extern int16_t rawAccelData[3];          //3 sixteen-bit integers produced by the HAL call to the accelerometer read function
 extern AccelData_t accelValueStruct;     //structure to contain accelerometer data organized with an x, y, and z member
 extern AccelData_t accelDataArray[100];  //array of the x,y, and z values to be used for further signal processing (averaging)
-extern AccelCalculations_t* accelMath;   //struct to hold the average of each component x_avg, y_avg, z_avg plus computed angles.
+extern AccelCalculations_t* accelMath;   //pointer to struct to hold the average of each component x_avg, y_avg, z_avg plus computed angles.
 
 
 // function prototypes
