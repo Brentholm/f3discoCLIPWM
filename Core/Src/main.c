@@ -172,14 +172,18 @@ int main(void)
   int16_t accelData[3] = {0};
   BSP_ACCELERO_GetXYZ(accelData);
 
-  // practice putting a rounded float to the screen
-  float myfloat = 3.14159;
-  char str[6] = "3.14";
-  char str2[20] = "999.9";
-  ST7735_WriteString(0, (3*10+2*18), str, Font_11x18, ST7735_GREEN, ST7735_BLACK);
-  // format float for printing as a string with two decimal places
-  sprintf(str2, "%2.2f", myfloat);
+  // initialize strings to hold formatted floating point
+  char str1[20] = "3.14";
+  char str2[20] = "42.0";
+  char str1_prev[20];
+  char str2_prev[20];
+
+  //for practice.  TBD: remove these lines from production
+  ST7735_WriteString(0, (3*10+2*18), str1, Font_11x18, ST7735_GREEN, ST7735_BLACK);
   ST7735_WriteString(0, (3*10+3*18), str2, Font_11x18, ST7735_GREEN, ST7735_BLACK);
+
+  //initialize the screen to black
+  ST7735_FillScreen(ST7735_BLACK);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -201,10 +205,22 @@ int main(void)
 		  //ConsoleProcess();
 		  ReadAccelDataArray(rawAccelData,  accelDataArray, READINGSTOAVERAGE);
 		  AverageAccelData(accelDataArray,  pAccelVessel, READINGSTOAVERAGE);
-		  sprintf(str2, "angle = %2.2f", accelVessel.horiz_angle);
-		  ST7735_FillScreen(ST7735_BLACK);
-		  ST7735_WriteString(0, (3*10+3*18), str2, Font_11x18, ST7735_GREEN, ST7735_BLACK);
-		  HAL_Delay(200);
+		  sprintf(str1, "vert: %2.1f", accelVessel.vert_angle);
+		  sprintf(str2, "horz: %2.1f", accelVessel.horiz_angle);
+		  //ST7735_FillScreen(ST7735_BLACK);
+		  // instead of blanking the entire screen, write old value as black on black
+		  // TODO: initialize the first part of string, the label 'horz' or 'vert' and then just black out the numeric parts before updating
+		  ST7735_WriteString(0, (3*10+3*18), str1_prev, Font_11x18, ST7735_BLACK, ST7735_BLACK);  //font +background = black
+		  ST7735_WriteString(0, (3*10+3*18), str1,      Font_11x18, ST7735_GREEN, ST7735_BLACK);  //new reading
+
+		  ST7735_WriteString(0, (3*10+4*18), str2_prev, Font_11x18, ST7735_BLACK, ST7735_BLACK);  //font +background = black
+		  ST7735_WriteString(0, (3*10+4*18), str2,      Font_11x18, ST7735_GREEN, ST7735_BLACK);  //new reading
+
+		  //strcpy(destination, source);
+		  //preserve a copy of the old text such that it can be used to black out itself next time through loop
+		  strcpy(str1_prev, str1);
+		  strcpy(str2_prev, str2);
+		  HAL_Delay(500);
 	  }
 
   }
