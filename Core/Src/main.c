@@ -37,11 +37,6 @@
 #include "../st7735/st7735.h"
 #include "../st7735/fonts.h"
 
-/*
-//new for the ST7735 TFT display
-#include "../st7735/st7735.h"
-#include "../st7735/fonts.h"
-*/
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -62,9 +57,6 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
-
-
 
 /* USER CODE END PV */
 

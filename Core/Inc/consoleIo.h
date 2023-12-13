@@ -3,9 +3,14 @@
 #ifndef CONSOLE_IO_H
 #define CONSOLE_IO_H
 
+#include <stdio.h>
 #include <stdint.h>
+#include <string.h>
+#include "main.h"
 
 typedef enum {CONSOLE_SUCCESS = 0u, CONSOLE_ERROR = 1u } eConsoleError;
+
+extern UART_HandleTypeDef huart1;
 
 eConsoleError ConsoleIoInit(void);
 
