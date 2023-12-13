@@ -194,7 +194,7 @@ int main(void)
 
 	  while(1)
 	  {
-		  //ConsoleProcess();
+		  ConsoleProcess();
 		  ReadAccelDataArray(rawAccelData,  accelDataArray, READINGSTOAVERAGE);
 		  AverageAccelData(accelDataArray,  pAccelVessel, READINGSTOAVERAGE);
 		  sprintf(str1, "vert: %2.1f", accelVessel.vert_angle);
