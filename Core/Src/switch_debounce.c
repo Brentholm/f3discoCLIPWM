@@ -6,10 +6,19 @@
  */
 
 #include "switch_debounce.h"
+#include "level_accel.h"
+#include "stm32f3_discovery.h"
 #include  <stdbool.h>
 
 bool userButtonChanged;
 bool userButtonPressed;
+
+volatile LevelMode_e mode = Horizontal;
+
+LevelMode_e get_current_mode() {
+  return mode; // Return the current mode value
+}
+
 
 /* 
 * @brief this is a callback function for the interrupt created by the user button rising edge
@@ -35,11 +44,20 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_7, GPIO_PIN_SET);    //my test pin for Saleae to watch
-	// todo: write code to check the button state
-	// and to start a timer in one-shot mode to start a debounce timer to check the button state again after ~20 msec
-	//HAL_TIM_Base_Stop_IT(&htim2);
-	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_7, GPIO_PIN_RESET);  //my test pin for Saleae to watch
+	// HAL_GPIO_WritePin(GPIOE, GPIO_PIN_7, GPIO_PIN_SET);    //my test pin for Saleae to watch
+	// if we have arrived here, it means the button was pressed once AND that a timer has expired so it's
+	// time to check it again (~5ms later)
+	HAL_TIM_Base_Stop_IT(&htim2);    //shut off the timer so it doesn't check again and again
+	if (HAL_GPIO_ReadPin(USER_BUTTON_GPIO_PORT, USER_BUTTON_PIN)){
+		if (mode == Horizontal){
+			mode = Vertical;
+			HAL_GPIO_WritePin(GPIOE, GPIO_PIN_7, GPIO_PIN_SET);    //my test pin for Saleae to watch
+		} else {
+			mode = Horizontal;
+			HAL_GPIO_WritePin(GPIOE, GPIO_PIN_7, GPIO_PIN_RESET);    //my test pin for Saleae to watch
+		}
+	}
+	//HAL_GPIO_WritePin(GPIOE, GPIO_PIN_7, GPIO_PIN_RESET);  //my test pin for Saleae to watch
 	return;
 }
 

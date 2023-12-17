@@ -9,6 +9,7 @@
 #define SRC_LEDRELATED_H_
 
 #include "gpio.h"
+#include "level_accel.h"
 
 // Enum for LED states
 typedef enum
@@ -36,6 +37,7 @@ typedef enum
     TotalLeds       = 8 // A placeholder for the total number of LEDs
 } LedName_e;
 
+
 // Struct for each LED: its port , pin#, my name for it, and its state
 typedef struct
 {
@@ -53,6 +55,7 @@ void SetLedState(CompassLed_t *led, LedState_e newState); // Set the state of a 
 void LedRoseSetAll(CompassLed_t leds[]);       // Set all LEDs to ON. Updates the struct, but doesn't update the physical LEDs
 void LedRoseClearAll(CompassLed_t leds[]);     // Set all LEDs to OFF. Updates the struct, but doesn't update the physical LEDs
 void LedRoseUpdate(CompassLed_t leds[], uint16_t delay);  // Update the physical LEDs to match the struct
-
+void Led_Init(void);
+void LedRoseDisplayBubble(LevelMode_e currentLevelState, AccelCalculations_t accelValues); // exercise all 8 LED's in a pinwheel pattern at startup;
 
 #endif /* SRC_LEDRELATED_H_ */

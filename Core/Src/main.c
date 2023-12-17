@@ -36,6 +36,7 @@
 #include "switch_debounce.h"
 #include "../st7735/st7735.h"
 #include "../st7735/fonts.h"
+#include "tft_display.h"
 
 /* USER CODE END Includes */
 
@@ -57,7 +58,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+LevelMode_e horizontalOrVertical;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -70,7 +71,7 @@ int __io_getchar(int ch);
 int my_getchar(void);
 
 /* USER CODE END PFP */
-
+#define READINGSTOAVERAGE 5
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
@@ -112,41 +113,15 @@ int main(void)
   MX_TIM2_Init();
   MX_SPI2_Init();
 
-  /* Initialize interrupts */
-  MX_NVIC_Init();
+  MX_NVIC_Init();                       // Initialize interrupt control block
   /* USER CODE BEGIN 2 */
   
-  LedRoseUpdate(myLedStructArray,0);    // update the physical LED's to their initial state (OFF), with zero delay between each one
+  Led_Init();                           // exercise all 8 LED's in a pinwheel pattern at startup to demonstrate they're functional
 
-  LedRoseSetAll(myLedStructArray);      // set all LEDs to their ON state in the struct
-  LedRoseUpdate(myLedStructArray,50);   // update the actual LED state in a pinwheel fashion with 50ms delay between each one
-  
-  LedRoseClearAll(myLedStructArray);    // set all LEDs to their OFF state in the struct
-  LedRoseUpdate(myLedStructArray,50);   // update the actual LED state in a pinwheel fashion with 50ms delay between each one
+  ST7735_Init();                        // initialize the TFT display driver
+  TftDisplay_Init();                    // display a brief welcome screen or test pattern on display
 
-  ST7735_Init();                        // initialize the TFT display
 
-  HAL_GPIO_WritePin(ST7735_LITE_GPIO_Port, ST7735_LITE_Pin, SET);   // turn on the TFT backlight
-  ST7735_FillScreen(ST7735_BLACK);      // fill the screen with black to blank it
-
-  // draw a red border around the screen
-  for(int x = 0; x < ST7735_WIDTH; x++) {
-	  ST7735_DrawPixel(x, 0, ST7735_RED);
-	  ST7735_DrawPixel(x, ST7735_HEIGHT-1, ST7735_RED);
-  }
-
-  for(int y = 0; y < ST7735_HEIGHT; y++) {
-	  ST7735_DrawPixel(0, y, ST7735_RED);
-	  ST7735_DrawPixel(ST7735_WIDTH-1, y, ST7735_RED);
-  }
-
-  // delay a half second before clearing the screen again
-  HAL_Delay(500);
-  ST7735_FillScreen(ST7735_BLACK);
-
-  ST7735_WriteString(0, 3*10, "Hello Green Turtles", Font_11x18, ST7735_GREEN, ST7735_BLACK);
-  HAL_Delay(500);
-  // ST7735_FillScreen(ST7735_BLACK);
 
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);  //pwm on pin PC6 just for fun - it's on the lower right corner of F3Disco board
   //don't start this here; it will get started when the button press ISR/callback fires
@@ -170,12 +145,6 @@ int main(void)
   char str1_prev[20];
   char str2_prev[20];
 
-  //for practice.  TBD: remove these lines from production
-  ST7735_WriteString(0, (3*10+2*18), str1, Font_11x18, ST7735_GREEN, ST7735_BLACK);
-  ST7735_WriteString(0, (3*10+3*18), str2, Font_11x18, ST7735_GREEN, ST7735_BLACK);
-
-  //initialize the screen to black
-  ST7735_FillScreen(ST7735_BLACK);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -188,17 +157,20 @@ int main(void)
     /* USER CODE BEGIN 3 */
 
 	  ConsoleInit();
-#define READINGSTOAVERAGE 3
-
-
 
 	  while(1)
 	  {
 		  ConsoleProcess();
 		  ReadAccelDataArray(rawAccelData,  accelDataArray, READINGSTOAVERAGE);
 		  AverageAccelData(accelDataArray,  pAccelVessel, READINGSTOAVERAGE);
-		  sprintf(str1, "vert: %2.1f", accelVessel.vert_angle);
-		  sprintf(str2, "horz: %2.1f", accelVessel.horiz_angle);
+		  horizontalOrVertical = get_current_mode();
+		  if (horizontalOrVertical == Horizontal){
+			  sprintf(str1, "vert: %2.1f", accelVessel.vert_angle);
+			  sprintf(str2, "HORZ: %2.1f", accelVessel.horiz_angle);
+		  } else {
+			  sprintf(str1, "VERT: %2.1f", accelVessel.vert_angle);
+			  sprintf(str2, "horz: %2.1f", accelVessel.horiz_angle);
+		  }
 		  //ST7735_FillScreen(ST7735_BLACK);
 		  // instead of blanking the entire screen, write old value as black on black
 		  // TODO: initialize the first part of string, the label 'horz' or 'vert' and then just black out the numeric parts before updating
@@ -212,6 +184,8 @@ int main(void)
 		  //preserve a copy of the old text such that it can be used to black out itself next time through loop
 		  strcpy(str1_prev, str1);
 		  strcpy(str2_prev, str2);
+
+		  LedRoseDisplayBubble(horizontalOrVertical, accelVessel);
 		  HAL_Delay(500);
 	  }
 

@@ -10,6 +10,13 @@
 
 #define RADIANS_TO_DEGREES (180/3.14159)
 
+//enumerated type for keeping track of whether we're interested in horizontal or vertical readings
+typedef enum
+{
+    Horizontal       = 0,
+    Vertical         = 1
+} LevelMode_e;
+
 // struct for holding the three accel values which are each int16_t (2 bytes), one for x, y, and z
 // note that the values emerge as left-justified so in 2g fullscale mode expect +1g = 16000 counts and -1g = -16000 counts
 // that is, 1000 milli-g's left-shifted by 4 bits
