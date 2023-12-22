@@ -139,11 +139,7 @@ int main(void)
   int16_t accelData[3] = {0};
   BSP_ACCELERO_GetXYZ(accelData);
 
-  // initialize strings to hold formatted floating point
-  char str1[20] = "3.14";
-  char str2[20] = "42.0";
-  char str1_prev[20];
-  char str2_prev[20];
+
 
   /* USER CODE END 2 */
 
@@ -163,28 +159,9 @@ int main(void)
 		  ConsoleProcess();
 		  ReadAccelDataArray(rawAccelData,  accelDataArray, READINGSTOAVERAGE);
 		  AverageAccelData(accelDataArray,  pAccelVessel, READINGSTOAVERAGE);
+
 		  horizontalOrVertical = get_current_mode();
-		  if (horizontalOrVertical == Horizontal){
-			  sprintf(str1, "vert: %2.1f", accelVessel.vert_angle);
-			  sprintf(str2, "HORZ: %2.1f", accelVessel.horiz_angle);
-		  } else {
-			  sprintf(str1, "VERT: %2.1f", accelVessel.vert_angle);
-			  sprintf(str2, "horz: %2.1f", accelVessel.horiz_angle);
-		  }
-		  //ST7735_FillScreen(ST7735_BLACK);
-		  // instead of blanking the entire screen, write old value as black on black
-		  // TODO: initialize the first part of string, the label 'horz' or 'vert' and then just black out the numeric parts before updating
-		  ST7735_WriteString(0, (3*10+3*18), str1_prev, Font_11x18, ST7735_BLACK, ST7735_BLACK);  //font +background = black
-		  ST7735_WriteString(0, (3*10+3*18), str1,      Font_11x18, ST7735_GREEN, ST7735_BLACK);  //new reading
-
-		  ST7735_WriteString(0, (3*10+4*18), str2_prev, Font_11x18, ST7735_BLACK, ST7735_BLACK);  //font +background = black
-		  ST7735_WriteString(0, (3*10+4*18), str2,      Font_11x18, ST7735_GREEN, ST7735_BLACK);  //new reading
-
-		  //strcpy(destination, source);
-		  //preserve a copy of the old text such that it can be used to black out itself next time through loop
-		  strcpy(str1_prev, str1);
-		  strcpy(str2_prev, str2);
-
+		  TftDisplayAccelData(horizontalOrVertical, accelVessel);
 		  LedRoseDisplayBubble(horizontalOrVertical, accelVessel);
 		  HAL_Delay(500);
 	  }
