@@ -15,7 +15,7 @@
 #include "math.h"
 
 #define CLOSE_ENOUGH_THRESHOLD (1.0)
-
+#define ZERO_MS_DELAY (0)
 /**
  * @brief  array of struct of type CompassLed_t containing the  port, pin, and desired state of the LEDs
  */
@@ -51,43 +51,42 @@ void Led_Init(){
  * @brief uses the compass rose to turn on two diametrically opposed LED's, intended to emulate the bubble in a traditional spirit level
  * @note depending on what the current desired state of the level is (whether we're indicating horizontal "level" or vertical "plumb")
  * @note and whether the angle is "close enough" the pair of LED's chose will indicate either "tilted left", "right on" or "tilted right"
+ * @note 'fabs' is the floating point absolute function
  *  * @retval none
  */
 void LedRoseDisplayBubble(LevelMode_e currentLevelState, AccelCalculations_t accelValues){
 	LedRoseClearAll(myLedStructArray); //reset the states of all LEDs to OFF
 	switch (currentLevelState) {
-	case Horizontal:
+	case Horizontal:   //comparing angles to see how close to flat horizontal they are
 		if (fabs(accelValues.horiz_angle) < CLOSE_ENOUGH_THRESHOLD){
-			SetLedState(&myLedStructArray[LD7_Green_E], LED_ON);
+			SetLedState(&myLedStructArray[LD7_Green_E], LED_ON);   //light "east" and "west" to make a horizontal bar
 			SetLedState(&myLedStructArray[LD6_Green_W], LED_ON);
 			//break;
 		} else if (accelValues.horiz_angle > 0) {
-			SetLedState(&myLedStructArray[LD5_Orange_NE], LED_ON);
+			SetLedState(&myLedStructArray[LD5_Orange_NE], LED_ON); //this pair makes a bar sloping up and to the right
 			SetLedState(&myLedStructArray[LD8_Orange_SW], LED_ON);
 			//break;
 		} else {
-			SetLedState(&myLedStructArray[LD9_Blue_SE], LED_ON);
+			SetLedState(&myLedStructArray[LD9_Blue_SE], LED_ON);   //this pair makes a bar sloping down and to the right
 			SetLedState(&myLedStructArray[LD4_Blue_NW], LED_ON);
 		} break;
-	case Vertical:
+	case Vertical:   //comparing angles to see how close to straight up and down they are
 		if (fabs(accelValues.vert_angle) < CLOSE_ENOUGH_THRESHOLD){
-			SetLedState(&myLedStructArray[LD3_Red_N], LED_ON);
+			SetLedState(&myLedStructArray[LD3_Red_N], LED_ON);     //light "north" and south to make a vertical bar
 			SetLedState(&myLedStructArray[LD10_Red_S], LED_ON);
 			//break;
 		} else if (accelValues.vert_angle < 0) {
-			SetLedState(&myLedStructArray[LD4_Blue_NW], LED_ON);
-			SetLedState(&myLedStructArray[LD9_Blue_SE], LED_ON);
+			SetLedState(&myLedStructArray[LD9_Blue_SE], LED_ON);   //this pair makes makes a bar sloping up and to left
+			SetLedState(&myLedStructArray[LD4_Blue_NW], LED_ON);   //that is, more counter-clockwise than vertical
+
 			//break;
 		} else {
-			SetLedState(&myLedStructArray[LD5_Orange_NE], LED_ON);
-			SetLedState(&myLedStructArray[LD8_Orange_SW], LED_ON);
+			SetLedState(&myLedStructArray[LD5_Orange_NE], LED_ON);  //this pair makes a bar sloping up and to the right
+			SetLedState(&myLedStructArray[LD8_Orange_SW], LED_ON);  //that is, more clockwise than vertical
 		} break;
 	}
-	LedRoseUpdate(myLedStructArray,0);
+	LedRoseUpdate(myLedStructArray,ZERO_MS_DELAY);  //actually illuminate the intended LEDs; zero delay between GPIO updates
 }
-
-
-
 
 
 /**
@@ -130,7 +129,6 @@ void LedRoseUpdate(CompassLed_t leds[], uint16_t delay)
 		HAL_Delay(delay);
 	}
 }
-
 
 /**
   * @brief  set the desired on/off state of an individual LED.

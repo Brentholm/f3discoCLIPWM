@@ -25,11 +25,13 @@ LevelMode_e get_current_mode() {
 * @param GPIO_Pin the pin that triggered the interrupt
 * @retval None
 * @note this function is called by the HAL_GPIO_EXTI_Callback function
-* @note this function starts the timer that will be used to debounce the button 50 msec after the button is pressed
+* @note this function starts the timer that will be used to debounce the button 5 msec after the button is pressed
 * @note this function also sets the userButtonChanged flag to true
 * */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
+	//disable the GPIO interrupt so a second/third bounce doesn't cause another interrupt
+	HAL_NVIC_DisableIRQ(EXTI0_IRQn);
 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_7, GPIO_PIN_SET);    //my test pin for Saleae to watch
 	HAL_TIM_Base_Init(&htim2);
 	HAL_TIM_Base_Start_IT(&htim2);
@@ -58,6 +60,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		}
 	}
 	//HAL_GPIO_WritePin(GPIOE, GPIO_PIN_7, GPIO_PIN_RESET);  //my test pin for Saleae to watch
+	//enable the GPIO edge triggered interrupt again on the way out
+	HAL_NVIC_EnableIRQ(EXTI0_IRQn);
 	return;
 }
 
