@@ -64,3 +64,6 @@ void TftDisplayAccelData(LevelMode_e horizOrVertical, AccelCalculations_t result
 	strcpy(str1_prev, str1);
 	strcpy(str2_prev, str2);
 }
+
+
+

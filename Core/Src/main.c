@@ -59,6 +59,7 @@
 
 /* USER CODE BEGIN PV */
 LevelMode_e horizontalOrVertical;
+LevelMode_e previousMode;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
