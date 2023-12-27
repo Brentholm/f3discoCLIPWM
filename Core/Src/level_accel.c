@@ -89,8 +89,9 @@ void AverageAccelData(AccelData_t* samplesArray, AccelCalculations_t* results, i
 	results->y_avg = (float)y_sum / N;
 	results->z_avg = (float)z_sum / N;
 	
-	results->horiz_angle = -RAD2DEG * atan2(results->x_avg, results->z_avg);  //the minus sign produces the angle we are accustomed to from calculus
-	results->vert_angle  = RAD2DEG * atan2(results->z_avg, results->x_avg);
+	results->horiz_angle = RAD2DEG * atan2(results->y_avg, results->x_avg);
+	results->vert_angle  = -RAD2DEG * atan2(results->x_avg, results->y_avg);  //the minus sign gives the result we expect from calculus
+																				// positive angles rotate counter-clockwise
 	
 }
 

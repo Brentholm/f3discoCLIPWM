@@ -59,10 +59,10 @@ void LedRoseDisplayBubble(LevelMode_e currentLevelState, AccelCalculations_t acc
 	switch (currentLevelState) {
 	case Horizontal:   //comparing angles to see how close to flat horizontal they are
 		if (fabs(accelValues.horiz_angle) < CLOSE_ENOUGH_THRESHOLD){
-			SetLedState(&myLedStructArray[LD7_Green_E], LED_ON);   //light "east" and "west" to make a horizontal bar
-			SetLedState(&myLedStructArray[LD6_Green_W], LED_ON);
+			SetLedState(&myLedStructArray[LD3_Red_N], LED_ON);   //light "east" and "west" to make a horizontal bar
+			SetLedState(&myLedStructArray[LD10_Red_S], LED_ON);
 			//break;
-		} else if (accelValues.horiz_angle > 0) {
+		} else if (accelValues.horiz_angle < 0) {
 			SetLedState(&myLedStructArray[LD5_Orange_NE], LED_ON); //this pair makes a bar sloping up and to the right
 			SetLedState(&myLedStructArray[LD8_Orange_SW], LED_ON);
 			//break;
@@ -75,7 +75,7 @@ void LedRoseDisplayBubble(LevelMode_e currentLevelState, AccelCalculations_t acc
 			SetLedState(&myLedStructArray[LD3_Red_N], LED_ON);     //light "north" and south to make a vertical bar
 			SetLedState(&myLedStructArray[LD10_Red_S], LED_ON);
 			//break;
-		} else if (accelValues.vert_angle < 0) {
+		} else if (accelValues.vert_angle > 0) {
 			SetLedState(&myLedStructArray[LD9_Blue_SE], LED_ON);   //this pair makes makes a bar sloping up and to left
 			SetLedState(&myLedStructArray[LD4_Blue_NW], LED_ON);   //that is, more counter-clockwise than vertical
 
