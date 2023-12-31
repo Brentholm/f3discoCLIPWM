@@ -26,11 +26,11 @@ static eCommandResult_T ConsoleCommandParamExampleInt16(const char buffer[]);
 static eCommandResult_T ConsoleCommandParamExampleHexUint16(const char buffer[]);
 static eCommandResult_T ConsoleCommandReadAccelS(const char buffer[]);
 static eCommandResult_T ConsoleCommandReadAccelA(const char buffer[]);
-static eCommandResult_T ConsoleCommandReadAngle(const char buffer[]);
+static eCommandResult_T ConsoleCommandReadAverage(const char buffer[]);
 static eCommandResult_T ConsoleCommandReadAccel(const char buffer[]);
 static eCommandResult_T ConsoleCommandLedsRose(const char buffer[]);
 static eCommandResult_T ConsoleCommandLedsRocker(const char buffer[]);
-static eCommandResult_T ConsoleCommandButtonState(const char buffer[]);
+//static eCommandResult_T ConsoleCommandButtonState(const char buffer[]);
 
 static const sConsoleCommandTable_T mConsoleCommandTable[] =
 {
@@ -41,11 +41,11 @@ static const sConsoleCommandTable_T mConsoleCommandTable[] =
     {"u16h", &ConsoleCommandParamExampleHexUint16, HELP("How to get a hex u16 from the params list: u16h aB12")},
 	{"acs" , &ConsoleCommandReadAccelS, HELP("reads accel once, puts values in struct, reports that struct")},
 	{"aca" , &ConsoleCommandReadAccelA, HELP("Reads the accel N times and prints each one to the console")},
-	{"agl" , &ConsoleCommandReadAngle, HELP("Reports the current Acceleration (z-direction) in milli-g")},
+	{"avg" , &ConsoleCommandReadAverage, HELP("Reports average of 5 samples of x, y, and z accel")},
 	{"acc" , &ConsoleCommandReadAccel, HELP("reports the current 3 axis acceleration")},
 	{"leds" ,&ConsoleCommandLedsRose, HELP("Briefly flashes the 8 LEDs to show they are working")},
 	{"rokr" ,&ConsoleCommandLedsRocker, HELP("LED teeter totter for ~2seconds")},
-	{"buts",&ConsoleCommandButtonState, HELP("Prints the present state of the Blue user button")},
+	//{"buts",&ConsoleCommandButtonState, HELP("Prints the present state of the Blue user button")},
 	CONSOLE_COMMAND_TABLE_END // must be LAST
 };
 
@@ -160,16 +160,15 @@ static eCommandResult_T ConsoleCommandReadAccelA(const char buffer[])
 	return result;
 }
 
-static eCommandResult_T ConsoleCommandReadAngle(const char buffer[])
+static eCommandResult_T ConsoleCommandReadAverage(const char buffer[])
 {
 	eCommandResult_T result = COMMAND_SUCCESS;
 	AccelData_t accel_struct_array[100] = {0};
 	int16_t accelData[3] = {0};
-	uint32_t xSum, ySum, zSum = 0;     // accumulate the consecutive sample values
-	uint32_t N = 0;
+	int32_t xSum, ySum, zSum = 0;     // accumulate the consecutive sample values
+	uint32_t N = 5;
 	float xAve, yAve, zAve = 0;        // hold the average value of accel along each axis
 	IGNORE_UNUSED_VARIABLE(buffer);
-	ConsoleIoSendString("Angle Horizontal ");
 	ConsoleIoSendString(STR_ENDLINE);
 
 	ReadAccelDataArray(accelData, accel_struct_array, N );
@@ -190,17 +189,17 @@ static eCommandResult_T ConsoleCommandReadAngle(const char buffer[])
 		}
 		xAve = (float)xSum/N;
 		yAve = (float)ySum/N;
-		zAve = (float)ySum/N;
+		zAve = (float)zSum/N;
 
 		ConsoleIoSendString(STR_ENDLINE);
-		ConsoleIoSendString("xSum, ySum, zSumx ");
+		ConsoleIoSendString("xAve, yAve, zAve ");
 		ConsoleIoSendString(STR_ENDLINE);
 
-		ConsoleSendParamInt16(xSum);
+		ConsoleSendParamInt16(xAve);
 		ConsoleIoSendString(" , ");
-		ConsoleSendParamInt16(ySum);
+		ConsoleSendParamInt16(yAve);
 		ConsoleIoSendString(" , ");
-		ConsoleSendParamInt16(zSum);
+		ConsoleSendParamInt16(zAve);
 		ConsoleIoSendString(STR_ENDLINE);
 
 	return result;
@@ -284,7 +283,7 @@ static eCommandResult_T ConsoleCommandLedsRose(const char buffer[])
 }
 
 
-static eCommandResult_T ConsoleCommandButtonState(const char buffer[])
+/*static eCommandResult_T ConsoleCommandButtonState(const char buffer[])
 {
 	eCommandResult_T result = COMMAND_SUCCESS;
 	IGNORE_UNUSED_VARIABLE(buffer);
@@ -297,7 +296,7 @@ static eCommandResult_T ConsoleCommandButtonState(const char buffer[])
 	}
 	ConsoleIoSendString(STR_ENDLINE);
 	return result;
-}
+}*/
 
 const sConsoleCommandTable_T* ConsoleCommandsGetTable(void)
 {
