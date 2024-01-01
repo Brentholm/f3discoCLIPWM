@@ -113,7 +113,7 @@ void ConsoleInit(void)
 	uint32_t i;
 
 	ConsoleIoInit();
-	ConsoleIoSendString("Welcome to Brent's console.");
+	ConsoleIoSendString("Welcome to the Level Up console.");
 	ConsoleIoSendString(STR_ENDLINE);
 	ConsoleIoSendString(CONSOLE_PROMPT);
 	mReceivedSoFar = 0u;

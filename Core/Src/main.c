@@ -131,8 +131,8 @@ int main(void)
 
 
   // exercise the console code
-  USART1_SendString("Hello, World!\r\n");
-  printf("Hi Brent\r\n");
+  USART1_SendString("Hello, Green Turtles!\r\n");
+  printf("******\r\n");
 
   // initialize the onboard accelerometer 
   BSP_ACCELERO_Init();

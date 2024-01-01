@@ -45,9 +45,15 @@ void ReadAccelData(int16_t* rawAccelData, AccelData_t* accel_data)
 * @param accel_data_array pointer to an array of structs to hold the accel data 
 * @param N the number of data points to read
 * @returnval None
-* @note there is an intentional 10ms delay between each reading to guarantee the readings are independent
+* @note there is an intentional 10ms delay between each reading to help insure the the readings are independent
 * @note this function was written as an enhancement to the original ReadAccelData function to allow collecting multiple readings
 * */
+
+//these 3 DC bias constants function as a hard-coded system calibration
+#define DC_BIAS_X (342)
+#define DC_BIAS_Y (-1064)
+#define DC_BIAS_Z (0)
+
 void ReadAccelDataArray(int16_t* rawAccelData, AccelData_t* accelDataArray, int N)
 {
 	if (N > 100)
@@ -59,9 +65,9 @@ void ReadAccelDataArray(int16_t* rawAccelData, AccelData_t* accelDataArray, int 
 		HAL_Delay(10);
 
 		//store the individual x, y, z reading to the array of structs
-		accelDataArray[i].x = rawAccelData[0];
-		accelDataArray[i].y = rawAccelData[1];
-		accelDataArray[i].z = rawAccelData[2];
+		accelDataArray[i].x = rawAccelData[0] - DC_BIAS_X;
+		accelDataArray[i].y = rawAccelData[1] - DC_BIAS_Y;
+		accelDataArray[i].z = rawAccelData[2] - DC_BIAS_Z;
 	}
 }
 
@@ -70,6 +76,7 @@ void ReadAccelDataArray(int16_t* rawAccelData, AccelData_t* accelDataArray, int 
 * @param accel_results, a pointer to a struct that holds the averages and angles of the accel data
 * @param N, the number of data points to average
  */
+
 void AverageAccelData(AccelData_t* samplesArray, AccelCalculations_t* results, int32_t N)
 {
 	if (N > 100)

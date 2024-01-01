@@ -42,22 +42,26 @@ void TftDisplayAccelData(LevelMode_e horizOrVertical, AccelCalculations_t result
 	char str2[20] = "42.0";
 	static char str1_prev[20];
 	static char str2_prev[20];
+	static LevelMode_e previousMode = Vertical;   //on the very first pass after startup, this should be Horizontal
 
 	if (horizOrVertical == Horizontal){
-		sprintf(str1, "vert: %2.1f", results.vert_angle);
-		sprintf(str2, "HORZ: %2.1f", results.horiz_angle);
+		sprintf(str1, "Horizontal");
+		sprintf(str2, "%+2.1f", results.horiz_angle);
 	} else {
-		sprintf(str1, "VERT: %2.1f", results.vert_angle);
-		sprintf(str2, "horz: %2.1f", results.horiz_angle);
+		sprintf(str1, "Vertical");
+		sprintf(str2, "%+2.1f", results.vert_angle);
 	}
 	//ST7735_FillScreen(ST7735_BLACK);
 	// instead of blanking the entire screen, write old value as black on black
-	// TODO: initialize the first part of string, the label 'horz' or 'vert' and then just black out the numeric parts before updating
-	ST7735_WriteString(0, (3*10+3*18), str1_prev, Font_11x18, ST7735_BLACK, ST7735_BLACK);  //font +background = black
-	ST7735_WriteString(0, (3*10+3*18), str1,      Font_11x18, ST7735_GREEN, ST7735_BLACK);  //new reading
+	// check to see if the mode has changed and only rewrite if it has
+	if (horizOrVertical != previousMode){
+		ST7735_WriteString(0, (5*10), str1_prev, Font_11x18, ST7735_BLACK, ST7735_BLACK);  //font & background = black
+		ST7735_WriteString(0, (5*10), str1,      Font_11x18, ST7735_CYAN, ST7735_BLACK);  //new reading
+		previousMode = horizOrVertical;
+	}
 
-	ST7735_WriteString(0, (3*10+4*18), str2_prev, Font_11x18, ST7735_BLACK, ST7735_BLACK);  //font +background = black
-	ST7735_WriteString(0, (3*10+4*18), str2,      Font_11x18, ST7735_GREEN, ST7735_BLACK);  //new reading
+	ST7735_WriteString(0, (5*10+2*18), str2_prev, Font_16x26, ST7735_BLACK, ST7735_BLACK);  //font +background = black
+	ST7735_WriteString(0, (5*10+2*18), str2,      Font_16x26, ST7735_GREEN, ST7735_BLACK);  //new reading
 
 	//strcpy(destination, source);
 	//preserve a copy of the old text such that it can be used to black out itself next time through loop
