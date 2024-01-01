@@ -16,6 +16,7 @@
 
 #define CLOSE_ENOUGH_THRESHOLD (1.0)
 #define ZERO_MS_DELAY (0)
+#define FIFTY_MS_DELAY (50)
 /**
  * @brief  array of struct of type CompassLed_t containing the  port, pin, and desired state of the LEDs
  */
@@ -38,13 +39,13 @@ CompassLed_t myLedStructArray[8] = {
  */
 
 void Led_Init(){
-	LedRoseUpdate(myLedStructArray,0);    // update the physical LED's to their initial state (OFF), with zero delay between each one
+	LedRoseUpdate(myLedStructArray,ZERO_MS_DELAY);    // update the physical LED's to their initial state (OFF), with zero delay between each one
 
 	LedRoseSetAll(myLedStructArray);      // set all LEDs to their ON state in the struct
-	LedRoseUpdate(myLedStructArray,50);   // update the actual LED state in a pinwheel fashion with 50ms delay between each successive one
+	LedRoseUpdate(myLedStructArray,FIFTY_MS_DELAY);   // update the actual LED state in a pinwheel fashion with 50ms delay between each successive one
 
 	LedRoseClearAll(myLedStructArray);    // set all LEDs to their OFF state in the struct
-	LedRoseUpdate(myLedStructArray,50);   // update the actual LED state in a pinwheel fashion with 50ms delay between each successive one
+	LedRoseUpdate(myLedStructArray,FIFTY_MS_DELAY);   // update the actual LED state in a pinwheel fashion with 50ms delay between each successive one
 }
 
 /*
@@ -61,11 +62,9 @@ void LedRoseDisplayBubble(LevelMode_e currentLevelState, AccelCalculations_t acc
 		if (fabs(accelValues.horiz_angle) < CLOSE_ENOUGH_THRESHOLD){
 			SetLedState(&myLedStructArray[LD3_Red_N], LED_ON);   //light "east" and "west" to make a horizontal bar
 			SetLedState(&myLedStructArray[LD10_Red_S], LED_ON);
-			//break;
 		} else if (accelValues.horiz_angle < 0) {
 			SetLedState(&myLedStructArray[LD5_Orange_NE], LED_ON); //this pair makes a bar sloping up and to the right
 			SetLedState(&myLedStructArray[LD8_Orange_SW], LED_ON);
-			//break;
 		} else {
 			SetLedState(&myLedStructArray[LD9_Blue_SE], LED_ON);   //this pair makes a bar sloping down and to the right
 			SetLedState(&myLedStructArray[LD4_Blue_NW], LED_ON);
@@ -74,12 +73,9 @@ void LedRoseDisplayBubble(LevelMode_e currentLevelState, AccelCalculations_t acc
 		if (fabs(accelValues.vert_angle) < CLOSE_ENOUGH_THRESHOLD){
 			SetLedState(&myLedStructArray[LD3_Red_N], LED_ON);     //light "north" and south to make a vertical bar
 			SetLedState(&myLedStructArray[LD10_Red_S], LED_ON);
-			//break;
 		} else if (accelValues.vert_angle > 0) {
 			SetLedState(&myLedStructArray[LD9_Blue_SE], LED_ON);   //this pair makes makes a bar sloping up and to left
 			SetLedState(&myLedStructArray[LD4_Blue_NW], LED_ON);   //that is, more counter-clockwise than vertical
-
-			//break;
 		} else {
 			SetLedState(&myLedStructArray[LD5_Orange_NE], LED_ON);  //this pair makes a bar sloping up and to the right
 			SetLedState(&myLedStructArray[LD8_Orange_SW], LED_ON);  //that is, more clockwise than vertical

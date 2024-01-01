@@ -31,7 +31,7 @@ void TftDisplay_Init(void){
 	HAL_Delay(500);
 	ST7735_FillScreen(ST7735_BLACK);
 
-	ST7735_WriteString(0, 3*10, "Level Up!", Font_11x18, ST7735_GREEN, ST7735_BLACK);
+	ST7735_WriteString(0, 3*10, "Level Up!", Font_11x18, ST7735_YELLOW, ST7735_BLACK);
 	HAL_Delay(500);
 	// ST7735_FillScreen(ST7735_BLACK);
 }

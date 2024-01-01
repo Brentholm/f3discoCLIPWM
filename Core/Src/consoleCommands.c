@@ -30,8 +30,7 @@ static eCommandResult_T ConsoleCommandReadAccelA(const char buffer[]);
 static eCommandResult_T ConsoleCommandReadAverage(const char buffer[]);
 static eCommandResult_T ConsoleCommandReadAccel(const char buffer[]);
 static eCommandResult_T ConsoleCommandLedsRose(const char buffer[]);
-static eCommandResult_T ConsoleCommandLedsRocker(const char buffer[]);
-//static eCommandResult_T ConsoleCommandButtonState(const char buffer[]);
+static eCommandResult_T ConsoleCommandLedsBubl(const char buffer[]);
 
 static const sConsoleCommandTable_T mConsoleCommandTable[] =
 {
@@ -45,8 +44,7 @@ static const sConsoleCommandTable_T mConsoleCommandTable[] =
 	{"avg" , &ConsoleCommandReadAverage, HELP("Reports average of 5 samples of x, y, and z accel")},
 	{"acc" , &ConsoleCommandReadAccel, HELP("reports the current 3 axis acceleration")},
 	{"leds" ,&ConsoleCommandLedsRose, HELP("Briefly flashes the 8 LEDs to show they are working")},
-	{"rokr" ,&ConsoleCommandLedsRocker, HELP("LED teeter totter for ~2seconds")},
-	//{"buts",&ConsoleCommandButtonState, HELP("Prints the present state of the Blue user button")},
+	{"bubl" ,&ConsoleCommandLedsBubl, HELP("LED teeter totter for ~2seconds")},
 	CONSOLE_COMMAND_TABLE_END // must be LAST
 };
 
@@ -222,13 +220,15 @@ static eCommandResult_T ConsoleCommandReadAccel(const char buffer[])
 	return result;
 }
 
-static eCommandResult_T ConsoleCommandLedsRocker(const char buffer[])
+static eCommandResult_T ConsoleCommandLedsBubl(const char buffer[])
 {
 	eCommandResult_T result = COMMAND_SUCCESS;
 	IGNORE_UNUSED_VARIABLE(buffer);
-	ConsoleIoSendString("LEDs will light two at a time and cycle through 3 states representing a very crude teeter-totter ");
+	ConsoleIoSendString("LEDs will light two at a time and cycle through 3 states imitating a bubble level ");
 	ConsoleIoSendString(STR_ENDLINE);
 
+	LedRoseClearAll(myLedStructArray);
+	LedRoseUpdate(myLedStructArray,0);
 	for (int i=1; i<21; i++)
 	{
 		switch(i%4)  // only spell out the ones that need to be turned ON
@@ -237,8 +237,8 @@ static eCommandResult_T ConsoleCommandLedsRocker(const char buffer[])
 		case 2:
 		{
 			//this is the horizontal case - light "east" and "west" LEDs
-			SetLedState(&myLedStructArray[LD6_Green_W], LED_ON);
-			SetLedState(&myLedStructArray[LD7_Green_E], LED_ON);
+			SetLedState(&myLedStructArray[LD3_Red_N], LED_ON);
+			SetLedState(&myLedStructArray[LD10_Red_S], LED_ON);
 			break;
 		}
 		case 1:
@@ -261,7 +261,7 @@ static eCommandResult_T ConsoleCommandLedsRocker(const char buffer[])
 		LedRoseUpdate(myLedStructArray,0);
 		// turn them all off but don't write them out- they'll get updated next time through the loop
 		LedRoseClearAll(myLedStructArray);
-		HAL_Delay(250);
+		HAL_Delay(350);
 	}
 		// clear them all and write them out
 		LedRoseClearAll(myLedStructArray);
@@ -283,21 +283,6 @@ static eCommandResult_T ConsoleCommandLedsRose(const char buffer[])
 	return result;
 }
 
-
-/*static eCommandResult_T ConsoleCommandButtonState(const char buffer[])
-{
-	eCommandResult_T result = COMMAND_SUCCESS;
-	IGNORE_UNUSED_VARIABLE(buffer);
-	ConsoleIoSendString("the present state of the Blue user button is: ");
-	if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0)) {
-		ConsoleIoSendString("DOWN, Depressed ");
-	}
-	else {
-		ConsoleIoSendString("UP, Unpressed ");
-	}
-	ConsoleIoSendString(STR_ENDLINE);
-	return result;
-}*/
 
 const sConsoleCommandTable_T* ConsoleCommandsGetTable(void)
 {
