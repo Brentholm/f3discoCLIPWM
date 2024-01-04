@@ -72,7 +72,7 @@ int __io_getchar(int ch);
 int my_getchar(void);
 
 /* USER CODE END PFP */
-#define READINGSTOAVERAGE 5
+#define READINGSTOAVERAGE 12
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
@@ -85,8 +85,8 @@ int my_getchar(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	AccelCalculations_t accelVessel ={0};
-	AccelCalculations_t* pAccelVessel = &accelVessel;
+	AccelCalculations_t AccelInfo ={0};
+	AccelCalculations_t* pAccelInfo = &AccelInfo;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -159,11 +159,11 @@ int main(void)
 	  {
 		  ConsoleProcess();
 		  ReadAccelDataArray(rawAccelData,  accelDataArray, READINGSTOAVERAGE);
-		  AverageAccelData(accelDataArray,  pAccelVessel, READINGSTOAVERAGE);
+		  AverageAccelData(accelDataArray,  pAccelInfo, READINGSTOAVERAGE);
 
 		  horizontalOrVertical = get_current_mode();
-		  TftDisplayAccelData(horizontalOrVertical, accelVessel);
-		  LedRoseDisplayBubble(horizontalOrVertical, accelVessel);
+		  TftDisplayAccelData(horizontalOrVertical, AccelInfo);
+		  LedRoseDisplayBubble(horizontalOrVertical, AccelInfo);
 		  HAL_Delay(500);
 	  }
 

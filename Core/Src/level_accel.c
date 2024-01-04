@@ -50,8 +50,8 @@ void ReadAccelData(int16_t* rawAccelData, AccelData_t* accel_data)
 * */
 
 //these 3 DC bias constants function as a hard-coded system calibration
-#define DC_BIAS_X (342)
-#define DC_BIAS_Y (-1064)
+#define DC_BIAS_X (280)
+#define DC_BIAS_Y (-1364)
 #define DC_BIAS_Z (0)
 
 void ReadAccelDataArray(int16_t* rawAccelData, AccelData_t* accelDataArray, int N)

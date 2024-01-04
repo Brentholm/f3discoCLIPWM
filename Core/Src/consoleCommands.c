@@ -40,7 +40,7 @@ static const sConsoleCommandTable_T mConsoleCommandTable[] =
     {"int", &ConsoleCommandParamExampleInt16, HELP("How to get a signed int16 from params list: int -321")},
     {"u16h", &ConsoleCommandParamExampleHexUint16, HELP("How to get a hex u16 from the params list: u16h aB12")},
 	{"acs" , &ConsoleCommandReadAccelS, HELP("reads accel once, puts values in struct, reports that struct")},
-	{"aca" , &ConsoleCommandReadAccelA, HELP("Reads the accel N times and prints each one to the console")},
+	{"aca" , &ConsoleCommandReadAccelA, HELP("Reads the accel 40 times and prints each one to the console")},
 	{"avg" , &ConsoleCommandReadAverage, HELP("Reports average of 5 samples of x, y, and z accel")},
 	{"acc" , &ConsoleCommandReadAccel, HELP("reports the current 3 axis acceleration")},
 	{"leds" ,&ConsoleCommandLedsRose, HELP("Briefly flashes the 8 LEDs to show they are working")},
@@ -165,7 +165,7 @@ static eCommandResult_T ConsoleCommandReadAverage(const char buffer[])
 	AccelData_t accel_struct_array[100] = {0};
 	int16_t accelData[3] = {0};
 	int32_t xSum, ySum, zSum = 0;     // accumulate the consecutive sample values
-	uint32_t N = 5;
+	uint32_t N = 12;
 	float xAve, yAve, zAve = 0;        // hold the average value of accel along each axis
 	IGNORE_UNUSED_VARIABLE(buffer);
 	ConsoleIoSendString(STR_ENDLINE);
